@@ -5,7 +5,6 @@ require('Class.php');
 header('Content-Type: text/html; charset=utf-8');
 date_default_timezone_set("Asia/Bangkok");
 session_start();
-$data_send = ['HptCode' => $HptCode, 'FacCode' => $FacCode, 'date1' => $date1, 'date2' => $date2,   'betweendate1' => $betweendate1, 'betweendate2' => $betweendate2, 'Format' => $Format, 'DepCode' => $DepCode, 'chk' => $chk];
 
 $data = explode(',', $_GET['data']);
 // echo "<pre>";
@@ -28,6 +27,8 @@ if ($language == "en") {
 } else {
   $language = "th";
 }
+$data_send = ['HptCode' => $HptCode, 'FacCode' => $FacCode, 'date1' => $date1, 'date2' => $date2,   'betweendate1' => $betweendate1, 'betweendate2' => $betweendate2, 'Format' => isset($Format)?$Format:'', 'DepCode' => $DepCode, 'chk' => $chk];
+
 $xml = simplexml_load_file('../xml/general_lang.xml');
 $xml2 = simplexml_load_file('../xml/report_lang.xml');
 $json = json_encode($xml);
@@ -117,11 +118,12 @@ class PDF extends FPDF
     $json2 = json_encode($xml2);
     $array2 = json_decode($json2, TRUE);
     $field = explode(",", $field);
+
     // Column widths
     $w = $width;
     // Header
     $this->SetFont('THSarabun', 'b', 12);
-    if ($i == 0 || $rows == 11) {
+    if ($i == 0 || isset($rows) == 11) {
       $this->Cell($w[0], 20, iconv("UTF-8", "TIS-620", $header[6]), 1, 0, 'C');
       $this->Cell($w[0], 20, iconv("UTF-8", "TIS-620", $header[0]), 1, 0, 'C');
       $this->Cell($w[1], 10, iconv("UTF-8", "TIS-620", $header[1]), 1, 0, 'C');
@@ -145,6 +147,7 @@ class PDF extends FPDF
     $loop = 0;
     $totalsum1 = 0;
     $totalsum2 = 0;
+    $total_hours = 0;
 
     if (is_array($data)) {
       foreach ($data as $data => $inner_array) {
@@ -160,10 +163,11 @@ class PDF extends FPDF
             $min_show = " mins ";
           }
         }
-        list($hours1, $min1, $secord1) = explode(":", $inner_array[$field[12]]);
-        list($hours2, $min2, $secord2) = explode(":", $inner_array[$field[13]]);
-        list($hours3, $min3, $secord3) = explode(":", $inner_array[$field[14]]);
-        list($hours4, $min4, $secord4) = explode(":", $inner_array[$field[11]]);
+
+        list($hours1, $min1) = explode(":", $inner_array[$field[12]]);
+        list($hours2, $min2) = explode(":", $inner_array[$field[13]]);
+        list($hours3, $min3) = explode(":", $inner_array[$field[14]]);
+        list($hours4, $min4) = explode(":", $inner_array[$field[11]]);
         $hours1 = str_replace("-", '', $hours1);
         $hours2 = str_replace("-", '', $hours2);
         $hours3 = str_replace("-", '', $hours3);
@@ -280,7 +284,7 @@ $pdf->Ln(10);
 $pdf->SetFont('THSarabun', 'b', 14);
 $pdf->Cell(1);
 $pdf->Cell(165, 10, iconv("UTF-8", "TIS-620", $array2['factory'][$language] . " : " . $Facname), 0, 0, 'L');
-$pdf->Cell(ุ60 , 10, iconv("UTF-8", "TIS-620", $date_header), 0, 0, 'R');
+$pdf->Cell(60, 10, iconv("UTF-8", "TIS-620", $date_header), 0, 0, 'R');
 $pdf->Ln(12);
 $HptCode = substr($HptCode, 0, 3);
 $doc = array('dirty', 'repair_wash', 'newlinentable');
@@ -310,10 +314,11 @@ $doc[$i].FacCode,
 process.DocNo AS  DocNo1 ,
 TIME ($doc[$i].ReceiveDate)AS ReceiveDate1,
 DATE_FORMAT($doc[$i].DocDate,'%d/%m/%Y') AS Date1,
-TIME_FORMAT(TIMEDIFF($doc[$i].ReceiveDate, process.SendEndTime), '%H:%i') AS TIME ,
-TIME_FORMAT(TIMEDIFF(process.WashStartTime ,process.WashEndTime), '%H:%i') AS wash ,
-TIME_FORMAT(TIMEDIFF(process.PackStartTime ,process.PackEndTime), '%H:%i') AS pack ,
-TIME_FORMAT(TIMEDIFF(process.SendStartTime ,process.SendEndTime), '%H:%i') AS send 
+TIME_FORMAT(TIMEDIFF($doc[$i].ReceiveDate, process.SendEndTime), '%H:%i') AS TIME,
+TIME_FORMAT(TIMEDIFF(process.WashStartTime ,process.WashEndTime), '%H:%i') AS wash,
+TIME_FORMAT(TIMEDIFF(process.PackStartTime ,process.PackEndTime), '%H:%i') AS pack,
+TIME_FORMAT(TIMEDIFF(process.SendStartTime ,process.SendEndTime), '%H:%i') AS send,
+'' AS Total
 FROM
 process
 LEFT JOIN $doc[$i] ON process.DocNo = $doc[$i].DocNo
@@ -328,6 +333,7 @@ AND process.isStatus <> 9 ";
   // width of column table
   $width = array(40, 40, 40, 40, 40, 25);
   // Get Data and store in Result
+
   $result = $data->getdata($conn, $query, $numfield, $field);
   // Set Table
   $pdf->SetFont('THSarabun', 'b', 10);

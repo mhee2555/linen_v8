@@ -15,6 +15,7 @@ Class Font
 
 Class Data {
   public function getdata($conn,$query,$numfield,$field) {
+    $Data = array();
         try {
             $field = explode(",",$field);
             $meQuery = mysqli_query($conn,$query);
