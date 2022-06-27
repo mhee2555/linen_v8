@@ -1,0 +1,527 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lang>
+
+<bind-selectCaregory><en>choose category</en><th>กรุณาเลือกประเภท</th></bind-selectCaregory>
+<bind-list_th><en>list(TH)</en><th>รายการไทย</th></bind-list_th>
+<bind-list_en><en>list(EN)</en><th>รายการอังกฤษ</th></bind-list_en>
+<bind-category><en>category</en><th>ประเภท</th></bind-category>
+<bind-thailist><en>Thai list</en><th>รายการไทย</th></bind-thailist>
+<bind-englishlist><en>English list</en><th>รายการอังกฤษ</th></bind-englishlist>
+<bind-thaidetail><en>Thai details</en><th>รายละเอียดไทย</th></bind-thaidetail>
+<bind-englishdetail><en>English detail</en><th>รายละเอียดอังกฤษ</th></bind-englishdetail>
+<bind-size_Color><en>size/color</en><th>ขนาด/สี</th></bind-size_Color>
+
+
+<supplier-selectcompany><en>choose Company</en><th>กรุณาเลือกบริษัท</th></supplier-selectcompany>
+<supplier-company><en>Company Name</en><th>ชื่อบริษัท</th></supplier-company>
+<supplier-companyth><en>Company Name(TH)</en><th>ชื่อบริษัทไทย</th></supplier-companyth>
+<supplier-companyen><en>Company Name(EN)</en><th>ชื่อบริษัทอังกฤษ</th></supplier-companyen>
+
+<color-group><en>colors group</en><th>กลุ่มสี</th></color-group>
+<color-color><en>colors</en><th>สี</th></color-color>
+<color-colorcode><en>colors code</en><th>รหัสสี</th></color-colorcode>
+<color-selectcolor><en>choose colors group</en><th>กรุณาเลือกกลุ่มสี</th></color-selectcolor>
+
+<fabric><en>Fabric</en><th>ผ้า</th></fabric>
+<thread_count><en>thread_count</en><th>เส้นด้าย</th></thread_count>
+<fabric-name><en>Fabric Name</en><th>ชื่อผ้า</th></fabric-name>
+<thread_count-name><en>thread_count Name</en><th>ชื่อเส้นด้าย</th></thread_count-name>
+
+<linen-type_en><en>Category Name(EN)</en><th>ชื่อประเภทอังกฤษ</th></linen-type_en>
+<linen-type_th><en>Category Name(TH)</en><th>ชื่อประเภทไทย</th></linen-type_th>
+
+     
+<Searchmeasurement><en>Search measurement</en><th>ค้นหา หน่วยนับ</th></Searchmeasurement>
+<Searchsubcategory><en>Search sub category</en><th>ค้นหา รายการรอง</th></Searchsubcategory>
+<Searchmaincategory><en>Search main category</en><th>ค้นหา รายการหลัก</th></Searchmaincategory>
+<Searchitem><en>Search item</en><th>ค้นหา รายการ</th></Searchitem>
+<Searchitem2><en>Search item</en><th>ค้นหารายการ</th></Searchitem2>
+<items><en>Item</en><th>รายการ</th></items>
+ <SearchDepartment><en>Search Department</en><th>ค้นหา แผนก</th></SearchDepartment>
+<SearchHospital><en>Search Hospital</en><th>ค้นหา โรงพยาบาล</th></SearchHospital>
+<SearchLaundry><en>Search Laundry</en><th>ค้นหา โรงงานซัก</th></SearchLaundry>
+<private><en>Show Money</en><th>แสดงเงิน</th></private>
+<government><en>Don't Money</en><th>ไม่แสดงเงิน</th></government>
+<return><en>Return</en><th>บันทึกรับคืนผ้า</th></return>
+<addrequest><en>Add request</en><th>เพิ่มรายการ</th></addrequest>
+<additem><en>Additem</en><th>เพิ่มรายการ</th></additem>
+<creation><en>Document creation date</en><th>วันที่สร้างเอกสาร</th></creation>
+
+
+
+<closeChat><en>Close topic of chat</en><th>ปิดหัวข้อการแชท</th></closeChat>
+
+
+<partotal><en>Par totals</en><th>ดูยอด Par</th></partotal>
+<paredit><en>Par edit Request</en><th>ร้องขอแก้ไขยอด Par</th></paredit>
+<Recallstain><en>Recall stain rays</en><th>เรียกเก็บผ้าสกปรก</th></Recallstain>
+<userdep><en>User department</en><th>ผู้เรียกเก็บผ้า</th></userdep>
+<dep><en>department</en><th>แผนกต้นทาง</th></dep>
+<Destinationdep><en>Destination departmen</en><th>แผนกปลายทาง</th></Destinationdep>
+<timedep><en>time</en><th>เวลาเรียกเก็บ</th></timedep>
+<userReply><en>user Reply</en><th>ผู้ตอบรับ</th></userReply>
+<userLinen><en>user Linen</en><th>ห้องผ้าตอบรับ</th></userLinen>
+<cancellation><en>Reason for cancellation</en><th>เหตุผลการยกเลิก</th></cancellation>
+
+<depRequest><en>Request</en><th>คำร้องขอ</th></depRequest>
+<depchat><en>Chat topic</en><th>หัวข้อแชท</th></depchat>
+<deprequester><en>Requester</en><th>ลงชื่อผู้ขอเบิก</th></deprequester>
+<depapprover><en>Approver</en><th>ลงชื่อผู้อนุมัติ</th></depapprover>
+<depremessage><en>Request messages</en><th>ข้อความที่ต้องการร้องขอ</th></depremessage>
+<plsdepremessage><en>Please fill in Request messages</en><th>กรุณากรอกข้อความที่ต้องการขอ</th></plsdepremessage>
+<movedep><en>Move department</en><th>ย้ายแผนก</th></movedep>
+<plsmovedep><en>Please enter the destination department</en><th>กรุณากรอกแผนกปลายทาง</th></plsmovedep>
+<signdep><en>sign</en><th>ลงชื่อ</th></signdep>
+
+
+<!--============================================================================== -->
+<selecttypelinen><en>Please Choose Typelinen</en><th>กรุณาเลือกประเภท</th></selecttypelinen>
+<selectpermission><en>Please Choose Permission</en><th>กรุณาเลือกสิทธิ์การเข้าถึง</th></selectpermission>
+<selectstartdate><en>Please Choose Startdate</en><th>กรุณาเลือกวันที่ทำสัญญา</th></selectstartdate>
+<selectenddate><en>Please Choose Enddate</en><th>กรุณาเลือกวันที่สิ้นสุดสัญญา</th></selectenddate>
+<selecthospital><en>Please Choose Hospital</en><th>กรุณาเลือกโรงพยาบาล</th></selecthospital>
+<selectnothospital><en>Hospital not center</en><th>โรงพยาบาลที่ท่านเลือกไม่มีแผนกศูนย์กลาง</th></selectnothospital>
+<selectgroup><en>Please Choose Group</en><th>กรุณาเลือกกลุ่ม</th></selectgroup>
+<selectdep><en>Please choose department</en><th>กรุณาเลือกแผนก</th></selectdep>
+<selectCycle><en>Please choose Cycle time</en><th>กรุณาเลือกรอบส่งผ้า</th></selectCycle>
+<selectdirty><en>Please choose Round dirty</en><th>กรุณาเลือกรอบชั่งผ้าสกปรก</th></selectdirty>
+<selectsc><en>Please choose ShelfCount time</en><th>กรุณาเลือกรอบนับผ้า</th></selectsc>
+<selectfactory><en>Please choose a factory</en><th>กรุณาเลือกโรงซัก</th></selectfactory>
+<Pleasechoosemaincategory><en>Please choose main category</en><th>กรุณาเลือกหมวดหมู่หลัก</th></Pleasechoosemaincategory>
+<Pleaseselectasubcategory><en>Please select a subcategory</en><th>กรุณาเลือกหมวดหมู่</th></Pleaseselectasubcategory>
+<!--============================================================================== -->
+<Laundry2><en>Laundry</en><th>โรงงานซัก</th></Laundry2>
+<ddmmyyyy><en>dd-mm-yyyy</en><th>วว-ดด-ปปปป</th></ddmmyyyy>
+<selectdate><en>Please choose a date</en><th>กรุณาเลือกวันที่</th></selectdate>
+<selectdateref><en>Date</en><th>วันที่</th></selectdateref>
+<insert_date><en>Please choose date of the form</en><th>กรุณาเลือกแบบฟอร์มวันที่</th></insert_date>
+<ppu><en>PPU</en><th>PPU</th></ppu>
+<prin><en>Print</en><th>พิมพ์</th></prin>
+<barcode><en>QrCode</en><th>คิวอาร์โค๊ด</th></barcode>
+<Cycle><en>Delivery Cycle</en><th>รอบส่ง</th></Cycle>
+<morning><en>Morning</en><th>รอบเช้า</th></morning>
+<afternoon><en>Afternoon</en><th>รอบบ่าย</th></afternoon>
+<Mainstock><en>Mainstock</en><th>คลังหลัก</th></Mainstock>
+<Jaipar><en>Payout</en><th>จ่ายผ้า</th></Jaipar>
+<newwash><en>newwash</en><th>ผ้าใหม่ส่งซัก</th></newwash>
+<setting><en>Setting</en><th>ตั้งค่า</th></setting>
+<notfoundDoc><en>Not found Document</en><th>ไม่พบเอกสาร</th></notfoundDoc>
+<time2><en>Time</en><th>เวลา</th></time2>
+<Receivetime><en>Receive time</en><th>เวลารับเอกสาร</th></Receivetime>
+<protime><en>Use time</en><th>เวลาที่ใช้</th></protime>
+<officehours><en>Office Hours</en><th>เวลาทำการ</th></officehours>
+<Starttime><en>Start</en><th>เวลาเริ่ม</th></Starttime>
+<tFinish><en>Finish</en><th>เสร็จสิ้น</th></tFinish>
+<departmentcode><en>DepCode</en><th>รหัสแผนก</th></departmentcode>
+<Wash><en>Wash</en><th>ซักผ้า</th></Wash>
+<packing><en>Pack</en><th>บรรจุผ้า</th></packing>
+<shipping><en>Shipping</en><th>ขนส่ง</th></shipping>
+<Signature><en>Signature</en><th>ลายเซ็น</th></Signature>
+<Allside><en>All Hospital</en><th>ทุกโรงพยาบาล</th></Allside>
+<Alldep><en>All ward</en><th>ทุกแผนก</th></Alldep>
+<AllCatmain><en>All CategoryMain</en><th>ทุกหมวดหมู่หลัก</th></AllCatmain>
+<AllCatsub><en>All CategorySub</en><th>ทุกหมวดหมู่</th></AllCatsub>
+<Allgroup><en>All Group</en><th>ทุกกลุ่ม</th></Allgroup>
+<Alldirty><en>All Round</en><th>ทุกรอบ</th></Alldirty>
+<Alllist><en>All List</en><th>ทุกรายการ</th></Alllist>
+
+<DuplicateItemcode><en>Duplicate Itemcode</en><th>รหัสรายการซ้ำ</th></DuplicateItemcode>
+<perunit><en>Per unit</en><th>ขนาดต่อหน่วย</th></perunit>
+<custom><en>Blank ID</en><th>รหัสเปล่า</th></custom>
+<spu><en>Size per unit</en><th>ขนาดต่อหน่วย</th></spu>
+<activeItem><en>Active</en><th>Active</th></activeItem>
+<email><en>Email</en><th>Email</th></email>
+<no><en>S/N</en><th>ลำดับ</th></no>
+<yes><en>Confirm</en><th>ยืนยัน</th></yes>
+<isno><en>Cancel</en><th>ยกเลิก</th></isno>
+<Timeleft><en>TIME LT</en><th>เหลือเวลา</th></Timeleft>
+<changprice><en>DATE OF CHG PC.</en><th>เปลี่ยนราคาวันที่</th></changprice>
+<filename><en>File Name</en><th>ชื่อไฟล์</th></filename>
+<pack><en>Pack</en><th>แพ็ค</th></pack>
+<type><en>type</en><th>ประเภท</th></type> 
+<search><en>Search</en><th>ค้นหา</th></search>
+<search_active><en>SRCH NOT AT.</en><th>ค้นหา รายการใหม่</th></search_active>
+<search_hp><en>SRCH HOSP</en><th>ค้นหา โรงพยาบาล</th></search_hp>
+<search_ct_main><en>SRCH MN CAT.</en><th>ค้นหา หมวดหมู่หลัก</th></search_ct_main>
+<search_ct_sub><en>SRCH 2nd CAT.</en><th>ค้นหา หมวดหมู่รอง</th></search_ct_sub>
+<searchalldep><en>SRCH DEP</en><th>ค้นหาทุกแผนก</th></searchalldep>
+<searchdep><en>Search To Department</en><th>ค้นหาตามแผนก</th></searchdep>
+<searchall><en>SRCH All</en><th>ค้นหาทั้งหมด</th></searchall>
+<titledirty><en>Dirty linen receive records</en><th>รับผ้าสกปรก</th></titledirty>
+<titlestockin><en>Receive into stock</en><th>รับเข้าสต๊อก</th></titlestockin>
+<titleclean><en>Receive clean linen</en><th>รับผ้าสะอาด</th></titleclean>
+<titlecleanstock><en>Receive cleanstock linen</en><th>รับผ้าเข้าสต๊อก</th></titlecleanstock>
+<titlerewash><en>Receive rewash linen</en><th>รับผ้าแก้ไข</th></titlerewash>
+<titlerewashreturn><en>Receive rewash return linen</en><th>ผ้าแก้ไขรับกลับ</th></titlerewashreturn>
+<titlerepair><en>Receive repair linen</en><th>รับผ้าที่ถูกซ่อม</th></titlerepair>
+<titledamage><en>Receive claim linen</en><th>รับผ้าส่งเคลมโรงซัก</th></titledamage>
+<titledamage2><en>Receive damage linen</en><th>รับผ้าส่งชำรุด</th></titledamage2>
+<titleshelf><en>Shelf Count</en><th>Shelf Count</th></titleshelf>
+<titleclaim><en>Claim</en><th>ใบเคลม</th></titleclaim>
+<titlecus><en>Customer bill records</en><th>บันทึกบิลลูกค้า</th></titlecus>
+<titlewash><en>Washing bill records</en><th>บันทึกบิลซัก</th></titlewash>
+<titlecontractfac><en>Factory Contract</en><th>สัญญาโรงซัก</th></titlecontractfac>
+<priceunit><en>Price unit</en><th>ราคาต่อหน่วย</th></priceunit>
+<choosedate><en>Please Choose Date</en><th>กรุณาเลือกวันที่</th></choosedate>
+<titlecontracthos><en>Hospital Contract</en><th>สัญญาโรงพยาบาล</th></titlecontracthos>
+<titlefactory><en>Factory</en><th>โรงงานซัก</th></titlefactory>
+<titlefactoryin><en>FactoryIn</en><th>รับผ้าสกปรก</th></titlefactoryin>
+<titlefactoryout><en>Send clean linen</en><th>ส่งผ้าสะอาด</th></titlefactoryout>
+<titledraw><en>Save draw</en><th>บันทึกเบิก</th></titledraw>
+<oldFormatItemCode><en>Old format code</en><th>รูปแบบรหัสเก่า</th></oldFormatItemCode>
+<newFormatItemCode><en>New format code</en><th>รูปแบบรหัสใหม่</th></newFormatItemCode>
+<logout><en>Logout success</en><th>ออกจากระบบสำเร็จ</th></logout>
+<login><en>Login success</en><th>เข้าสู่ระบบสำเร็จ</th></login>
+<side><en>Hospital</en><th>โรงพยาบาล</th></side>
+<sidex><en>Hospital</en><th>โรงพยาบาล</th></sidex>
+<invalid><en>Invalid date</en><th>เลือกวันที่ไม่ถูกต้อง</th></invalid>
+<facerror><en>Factory error</en><th>โรงซักไม่ถูกต้อง</th></facerror>
+<referror><en>Reference error</en><th>อ้างอิงเอกสารไม่ถูกต้อง</th></referror>
+<ref_and_fac_error><en>Reference and  Factory error</en><th>การอ้างอิงเอกสาร และ โรงซัก ไม่ถูกต้อง</th></ref_and_fac_error>
+<confac><en>Factory Expired Date </en><th>กำหนดเวลาหมดสัญญาโรงซัก</th></confac>
+<conhos><en>Hospital Expired Date </en><th>กำหนดเวลาหมดสัญญาโรงโรงพยาบาล</th></conhos>
+<selectDep><en>Select Department</en><th>เลือกแผนก</th></selectDep>
+<itemaneme><en>Item Name</en><th>ชื่อรายการ</th></itemaneme>
+<rounddirty><en>Round dirty</en><th>รอบชั่งผ้าสกปรก</th></rounddirty>
+<department><en>Department</en><th>แผนก</th></department>
+<group><en>Group</en><th>กลุ่ม</th></group>
+<docdate><en>Document date</en><th>วันที่เอกสาร</th></docdate>
+<docno><en>Document number</en><th>เลขที่เอกสาร</th></docno>
+<refdocno><en>Reference</en><th>เอกสารอ้างอิง</th></refdocno>
+<employee><en>Recorder</en><th>ผู้บันทึก</th></employee>
+<empcode><en>Employee Code</en><th>รหัสพนักงาน</th></empcode>
+<empfname><en>First Name</en><th>ชื่อพนักงาน</th></empfname>
+<emplname><en>Last Name</en><th>นามสกุล</th></emplname>
+<time><en>Record time</en><th>เวลาที่บันทึก</th></time>
+<totalweight><en>Total weight</en><th>น้ำหนักรวม</th></totalweight>
+<code><en>Code</en><th>รหัส</th></code>
+<item><en>List</en><th>รายการ</th></item>
+<rfid><en>RFID.</en><th>RFID.</th></rfid>
+<sn><en>S/N</en><th>ลำดับ</th></sn>
+<Canceldoc><en>Cancel</en><th>ยกเลิกเอกสาร</th></Canceldoc>
+<Delivery><en>Delivery</en><th>จัดส่งของ</th></Delivery>
+<Successx><en>Success</en><th>เสร็จสิ้น</th></Successx>
+<Report555><en>Report</en><th>ประเภทรายงาน</th></Report555>
+
+<ReportDirry><en>Report Dirty</en><th>รายงานบันทึกการส่งซักผ้าเปื้อน</th></ReportDirry>
+<ReportNewlinen><en>Report Newlinen</en><th>รายงานบันทึกการส่งผ้าใหม่ให้โรงซัก</th></ReportNewlinen>
+<ReportRewash><en>Report Rewash</en><th>รายงานบันทึกผ้าแก้ไข</th></ReportRewash>
+<ReportDamage><en>Report Damage</en><th>รายงานบันทึกผ้าชำรุดเสียหาย</th></ReportDamage>
+<ReportClean><en>Report Clean</en><th>รายงานบันทึกการชั่งน้ำหนักผ้าสะอาดจากโรงซัก</th></ReportClean>
+<ReportShelfcount><en>Report Shelfcount</en><th>ใบรายจ่ายผ้าประจำวัน</th></ReportShelfcount>
+
+<catmain><en>Category main</en><th>ประเภทรายการหลัก</th></catmain>
+<cycle><en>Cycle</en><th>รอบที่</th></cycle>
+<Organizer><en>organizer</en><th>ผู้จัด</th></Organizer>
+<officer><en>officer</en><th>ผู้ตรวจ</th></officer>
+<unit><en>Measurement</en><th>หน่วยนับ</th></unit>
+<unit2><en>Unit</en><th>หน่วยนับ</th></unit2>
+<weight><en>Weight</en><th>น้ำหนัก</th></weight>
+<weightsc><en>Weight</en><th>Weight</th></weightsc>
+<numofpiece><en>No. of pieces</en><th>จำนวนชิ้น</th></numofpiece>
+<createdocno><en>Create a document</en><th>สร้างเอกสาร</th></createdocno>
+<import><en>Add</en><th>เพิ่ม</th></import>
+<delitem><en>Delete items</en><th>ลบรายการ</th></delitem>
+<save><en>Save</en><th>บันทึก</th></save>
+<save_edit><en>Save Edit</en><th>บันทึกการแก้ไข</th></save_edit>
+<cancel><en>Cancel</en><th>ลบ</th></cancel>
+<searchplace><en>Search document</en><th>ค้นหาเลขที่เอกสาร</th></searchplace>
+<show><en>Show items</en><th>แสดงรายการ</th></show>
+<showshow><en>Show</en><th>แสดง</th></showshow>
+<hidehide><en>hide</en><th>ซ่อน</th></hidehide>
+<status><en>Status</en><th>สถานะ</th></status>
+<selectall><en>Select All</en><th>เลือกทั้งหมด</th></selectall>
+<close><en>Close</en><th>ปิด</th></close>
+<confirm><en>Confirm</en><th>ยืนยัน</th></confirm>
+<confirmdoc><en>Confirm create doc</en><th>ยืนยันการสร้างเอกสาร</th></confirmdoc>
+<confirmsave><en>Confirm save doc</en><th>ยืนยันการบันทึกเอกสาร</th></confirmsave>
+<confirmjaipar><en>Confirm save Payout</en><th>ยืนยันการจ่ายผ้า</th></confirmjaipar>
+<confirmpacking><en>Confirm save Packing</en><th>ยืนยันการจัดเตรียมผ้า</th></confirmpacking>
+<confirmsave1><en>Confirm save </en><th>ยืนยันการบันทึกข้อมูล</th></confirmsave1>
+<confirmdelete><en>Confirm delete item</en><th>ยืนยันการลบรายการ</th></confirmdelete>
+<confirmcancel><en>Confirm cancel doc</en><th>ยืนยันการยกเลิกเอกสาร</th></confirmcancel>
+<sendlinen><en>Send Linen</en><th>จัดส่งผ้า</th></sendlinen>
+<sendlinendep><en>Send linen to department.</en><th>จัดส่งผ้าเข้าแผนก</th></sendlinendep>
+<confirm1><en>Are you sure to delete [ </en><th>คุณต้องการลบรายการนี้  </th></confirm1>
+<confirm2><en> ] ?</en><th> ] ใช่หรือไม่</th></confirm2>
+<!-- <confirmdelete><en>Delete Item ?</en><th>ลบข้อมูล ?</th></confirmdelete> -->
+<confirmdelete1><en>Are you sure to delete</en><th>คุณต้องการลบข้อมูลนี้ [ </th></confirmdelete1>
+<confirmdelete2><en> ] ?</en><th> ] ใช่หรือไม่...!</th></confirmdelete2>
+<delete><en>Delete</en><th>ลบ</th></delete>
+<edit><en>Edit</en><th>แก้ไข</th></edit>
+<itemdepartment><en>Set Par</en><th>รายการในแผนก</th></itemdepartment>
+<success><en>Success</en><th>สำเร็จ</th></success>
+<DeliveryCycle><en>Delivery Cycle</en><th>รอบส่งผ้า</th></DeliveryCycle>
+<Deliverysc><en>Shelfcount Time</en><th>รอนับผ้า</th></Deliverysc>
+<savesuccess><en>Saved</en><th>บันทึกสำเร็จ</th></savesuccess>
+<draft><en>Draft</en><th>ยังไม่ได้บันทึก</th></draft>
+<cancelbill><en>Cancel</en><th>ยกเลิกบิล</th></cancelbill>
+<dirtydoc><en>Dirty linen document </en><th>เอกสารรับผ้าสกปรก</th></dirtydoc>
+<dirtydoc1><en>Please select Dirty clothes Document</en><th>กรุณาเลือกเอกสารรับผ้าสกปรก</th></dirtydoc1>
+<cleandoc><en>Clean linen document </en><th>เอกสารรับผ้าสะอาด</th></cleandoc>
+<newlinendoc><en>Newlinen document </en><th>เอกสารรับผ้าใหม่</th></newlinendoc>
+
+<totalnum><en>Total number</en><th>จำนวนทั้งหมด</th></totalnum>
+<parsc><en>ParQty</en><th>ParQty</th></parsc>
+<pardep><en>Par</en><th>Par</th></pardep>
+<leftsc><en>ShelfCount</en><th>ShelfCount</th></leftsc>
+<qty><en>QTY</en><th>จำนวน</th></qty>
+<total><en>Number</en><th>จำนวน</th></total>
+<Packing><en>Packing</en><th>เริ่มจัดเตรียมผ้า</th></Packing>
+<order><en>Order</en><th>Order</th></order>
+<detail><en>Description</en><th>รายละเอียด</th></detail>
+<print><en>Print Report</en><th>พิมพ์รายงาน</th></print>
+<print2><en>Print ReportRFID</en><th>พิมพ์รายงานRFID</th></print2>
+<Sticker><en>Print Sticker</en><th>พิมพ์สติ๊กเกอร์</th></Sticker>
+<btnPrint><en>Print</en><th>พิมพ์</th></btnPrint>
+<report><en>Report</en><th>ออกรายงาน</th></report>
+<pleaseenter><en>Please Enter Number Sticker : 1 Sticker</en><th>กรุณากรอกจำนวนสติกเกอร์ : 1 ดวง</th></pleaseenter>
+<docfirst><en>Please select document.</en><th>กรุณาเลือกเอกสาร</th></docfirst>
+<processchooce><en>Please select Status.</en><th>กรุณาเลือกสถานะ</th></processchooce>
+<datestart><en>Start date</en><th>วันที่เริ่ม</th></datestart>
+<dateend><en>End date</en><th>วันที่สิ้นสุด</th></dateend>
+<percent><en>Percent</en><th>เปอร์เซ็นต์</th></percent>
+<date><en>Date</en><th>วันที่</th></date>
+<categorymain><en>Main category</en><th>หมวดหมู่หลัก</th></categorymain>
+<categorysub><en>Category</en><th>ประเภทหมวดหมู่</th></categorysub>
+<category><en>Category</en><th>หมวดหมู่</th></category>
+<deptnum><en>Department(Number)</en><th>แผนก(จำนวน)</th></deptnum>
+<factnum><en>Factory(Number)</en><th>โรงงานซัก(จำนวน)</th></factnum>
+<money><en>Cost</en><th>เป็นเงิน</th></money>
+<Quality><en>Quantity</en><th>ปริมาณ</th></Quality>
+<Weightitem><en>Weight</en><th>นํ้าหนัก</th></Weightitem>
+<Sizeitem><en>Size</en><th>ขนาด</th></Sizeitem>
+<wantsave><en>Want Save</en><th>ต้องการบันทึกข้อมูล</th></wantsave>
+<ConfirmPrint><en>Confirm Print</en><th>ยืนยันการพิมพ์รายงาน</th></ConfirmPrint>
+<insert_form><en>Please Complete The Information</en><th>กรุณากรอกข้อมูลให้ครบ</th></insert_form>
+<printbill><en>Print Bill</en><th>พิมพ์บิล</th></printbill>
+<factory><en>Laundry</en><th>โรงงานซัก</th></factory>
+<datestartcontract><en>Start Date</en><th>วันที่ทำสัญญา</th></datestartcontract>
+<dateendcontract><en>End Date</en><th>วันที่สิ้นสุดสัญญา</th></dateendcontract>
+<numbercontract><en>Remaining duration (Days)</en><th>สิ้นสุดสัญญา(วัน)</th></numbercontract>
+<clear><en>Clear</en><th>ทำใหม่</th></clear>
+<balance><en>balance</en><th>คงเหลือ</th></balance>
+<over><en>Over</en><th>เกิน Par</th></over>
+<adddata><en>Add new data</en><th>เพิ่มข้อมูล</th></adddata>
+<adddata1><en>Do you want to add new data ?</en><th>คุณต้องการเพิ่มข้อมูลใหม่ใช่หรือไม่ ?</th></adddata1>
+<adddata8><en>Do you want to payout ?</en><th>คุณต้องการยืนยันการจ่ายผ้าใช่หรือไม่ ?</th></adddata8>
+<adddata9><en>Do you want to packing ?</en><th>คุณต้องการยืนยันการจัดเตรียมผ้าใช่หรือไม่ ?</th></adddata9>
+<editdata><en>Edit data</en><th>แก้ไขข้อมูล</th></editdata>
+<editdata1><en>Do you want to edit data ?</en><th>คุณต้องการแก้ไขข้อมูลใช่หรือไม่ ?</th></editdata1>
+<required><en>Please complete all required field.</en><th>กรุณากรอกข้อมูลให้ครบถ้วน</th></required>
+<canceldata><en>Delete data</en><th>ยกเลิกข้อมูล</th></canceldata>
+<canceldata1><en>Do you want to delete this ?</en><th>คุณต้องการยกเลิกข้อมูลนี้ใช่หรือไม่ ?</th></canceldata1>
+<canceldata2><en>Do you want to delete [ </en><th>คุณต้องการยกเลิกข้อมูล [ </th></canceldata2>
+<canceldata3><en>] ? </en><th> ] ใช่หรือไม่ ? </th></canceldata3>
+<canceldata4><en>Do you want to cancel this : </en><th>คุณต้องการยกเลิกข้อมูลนี้ใช่หรือไม่ : </th></canceldata4>
+<pleasewait><en>Please wait..</en><th>กรุณารอสักครู่</th></pleasewait>
+<processing><en>Processing</en><th>ระบบกำลังประมวลผล</th></processing>
+<faccode><en>ID</en><th>รหัสโรงซัก</th></faccode>
+<facname><en>LaundryEN</en><th>ชื่อโรงซักภาษาอังกฤษ</th></facname>
+<facnameTH><en>LaundryTH</en><th>ชื่อโรงซักภาษาไทย</th></facnameTH>
+<discount><en>Discount</en><th>ส่วนลด</th></discount>
+<add><en>Add</en><th>เพิ่ม</th></add>
+<tdas><en>Tdas</en><th>Tdas</th></tdas>
+<address><en>Address</en><th>ที่อยู่</th></address>
+<price><en>Price</en><th>ราคา</th></price>
+<taxid><en>Tax ID</en><th>เลขที่ผู้เสียภาษี</th></taxid>
+<postid><en>Post ID</en><th>รหัสไปรษณีย์</th></postid>
+<hoscode><en>Hospital code</en><th>รหัสโรงพยาบาล</th></hoscode>
+<hosnameEN><en>HospitalEN</en><th>ชื่อโรงพยาบาลภาษาอังกฤษ</th></hosnameEN>
+<hosnameTH><en>HospitalTH</en><th>ชื่อโรงพยาบาลภาษาไทย</th></hosnameTH>
+<codecode><en>Department code</en><th>รหัส</th></codecode>
+<Groupcode><en>Group code </en><th>รหัสกลุ่ม</th></Groupcode>
+<categorycode><en>Category code </en><th>รหัสหมวดหมู่</th></categorycode>
+<categorysubcode><en>Code</en><th>รหัสหมวดหมู่รอง</th></categorysubcode>
+<customer><en>Customer</en><th>ลูกค้า</th></customer>
+<addoredit><en>Add or Edit</en><th>เพิ่มหรือแก้ไขข้อมูล</th></addoredit>
+<addoredit1><en>Do you want to Add/Edit ?</en><th>คุณต้องการเพิ่มหรือแก้ไขข้อมูลใหม่ใช่หรือไม่ ?</th></addoredit1>
+<size><en>Size</en><th>ขนาด</th></size>
+<pricefac><en>FTY PC.</en><th>ราคาโรงงาน</th></pricefac>
+<pricecus><en>MKT PC.</en><th>ราคาลูกค้า</th></pricecus>
+<multiply><en>Multiple unit</en><th>ตัวคูณ</th></multiply>
+<multiply_unit><en>Multiple unit</en><th>ตัวคูณหน่วยนับ</th></multiply_unit>
+<multiply_price><en>Multiple price</en><th>ตัวคูณราคา</th></multiply_price>
+<mulmultiply><en>Multiple Unit</en><th>หลายหน่วยนับ</th></mulmultiply>
+<secunit><en>Sub unit</en><th>หน่วยนับรอง</th></secunit>
+<choosemsg><en>Please select your document.</en><th>กรุณาเลือกเอกสาร</th></choosemsg>
+<nodetailmsg><en>No detail in both department.</en><th>ไม่มีข้อมูลในแผนกที่ค้นหา</th></nodetailmsg>
+<cantcreatemsg><en>Cannot Create Document</en><th>ไม่สามารถสร้างเอกสารได้</th></cantcreatemsg>
+<noinputmsg><en>No input</en><th>ไม่มีข้อมูลนำเข้า</th></noinputmsg>
+<ndc><en>Hasn't created a contract yet.</en><th>ยังไม่ได้สร้างคู่สัญญา</th></ndc>
+<notfoundmsg><en>Not found</en><th>ไม่พบข้อมูล</th></notfoundmsg>
+<addsuccessmsg><en>Add detail success</en><th>เพิ่มข้อมูลสำเร็จ</th></addsuccessmsg>
+<addfailmsg><en>Add detail failed</en><th>เพิ่มข้อมูลล้มเหลว</th></addfailmsg>
+<editsuccessmsg><en>Edit detail success</en><th>แก้ไขข้อมูลสำเร็จ</th></editsuccessmsg>
+<editfailmsg><en>Edit detail failed</en><th>แก้ไขข้อมูลล้มเหลว</th></editfailmsg>
+<cancelsuccessmsg><en>Delete detail success</en><th>ยกเลิกข้อมูลสำเร็จ</th></cancelsuccessmsg>
+<cancelfailmsg><en>Delete detail failed</en><th>ยกเลิกข้อมูลล้มเหลว</th></cancelfailmsg>
+<Duplicatename><en>Duplicate name</en><th>ชื่อซ้ำ</th></Duplicatename>
+<Duplicatetype><en>Duplicate typelinen</en><th>ประเภทซ้ำ</th></Duplicatetype>
+
+
+<itemnew><en>New items</en><th>รายการใหม่</th></itemnew>
+<parnum><en>Par number</en><th>จำนวน Par</th></parnum>
+<addnewitem><en>Add item</en><th>เพิ่มรายการ</th></addnewitem>
+<expireday><en>Expired Date</en><th>วันที่หมดอายุ</th></expireday>
+<pleasefill><en>Please complete field number</en><th>กรุณาใส่หมายเลขให้ถูกต้อง</th></pleasefill>
+<pleasecheck><en>Please select item (At least one)</en><th>กรุณาเลือกรายการอย่างน้อย 1 รายการ</th></pleasecheck>
+<pleasepar><en>Please enter par number</en><th>กรุณาใส่จำนวน Par</th></pleasepar>
+<choose><en>Choose</en><th>เลือก</th></choose>
+<nono><en>No.</en><th>รหัส</th></nono>
+<xcenter><en>Center</en><th>ศูนย์กลาง</th></xcenter>
+<defaultname><en>Default</en><th>N Health</th></defaultname>
+<dirty><en>Dirty</en><th>รับผ้าสกปรก</th></dirty>
+<clean><en>Clean</en><th>รับผ้าสะอาด</th></clean>
+<cleanstock><en>CleanStock</en><th>รับเข้าสต๊อก</th></cleanstock>
+<damagenh><en>Damage NHealth</en><th>ผ้าชำรุด NHealth</th></damagenh>
+<Repairwash><en>Repairwash</en><th>รับผ้าแก้ไข</th></Repairwash>
+<clean><en>Clean</en><th>รับผ้าสะอาด</th></clean>
+
+<percent1><en>Percent</en><th>เปอร์เซ็นต์</th></percent1>
+<inventory><en>Warehouse</en><th>คลังเก็บของ</th></inventory>
+<recivedirtycloth><en>Recivedirtycloth</en><th>รับเข้าผ้าสกปรก</th></recivedirtycloth>
+<billclaim><en>Bill Claim</en><th>ใบเคลม</th></billclaim>
+<billcustomer><en>Bill Customer</en><th>บันทึกบิลลูกค้า</th></billcustomer>
+<factoryin><en>Send linen to the laundry</en><th>ส่งผ้าเข้าโรงซัก</th></factoryin>
+<factoryout><en>Send linen to N Health</en><th>ส่งผ้าเข้าเอ็นเฮลท์</th></factoryout>
+<permission><en>Access</en><th>การเข้าถึง</th></permission>
+<username><en>User</en><th>ผู้ใช้งาน</th></username>
+<password><en>Password</en><th>รหัสผ่าน</th></password>
+<flname><en>Firstname-Surname</en><th>ชื่อ-สกุล</th></flname>
+<setprice><en>Set price</en><th>กำหนดราคา</th></setprice>
+<datepicker><en>Select Date</en><th>เลือกวันที่</th></datepicker>
+<saveprice><en>Price records</en><th>บันทึกราคา</th></saveprice>
+<back><en>Back</en><th>กลับ</th></back>
+<changetimeout><en>Edit screen time</en><th>แก้ไขเวลาพักหน้าจอ</th></changetimeout>
+<changelang><en>Change Language</en><th>เปลี่ยนภาษา</th></changelang>
+<thai><en>Thai</en><th>ไทย</th></thai>
+<eng><en>English</en><th>อังกฤษ</th></eng>
+<alertPar><en>Over Par</en><th>แจ้งเตือนจำนวนเกิน</th></alertPar>
+<alertdraw><en>Qty inadequate</en><th>จำนวนคลังหลักมีไม่พอ</th></alertdraw>
+<alertdraw2><en>Qty inadequate</en><th>จำนวนคลังหลักมีไม่พอ2</th></alertdraw2>
+<alertPercent><en>Over Percent</en><th>แจ้งเตือนเปอร์เซ็นต์เกิน</th></alertPercent>
+<TotalPercent><en>Total Percent</en><th>เปอร์เซ็นต์ที่ได้</th></TotalPercent>
+<overPercent><en>Over Percent</en><th>เปอร์เซ็นต์ที่เกิน</th></overPercent>
+<empItem><en>Item In Main Stock Empty</en><th>คลังหลักไม่มีรายการ</th></empItem>
+<par><en>Par</en><th>Par</th></par>
+<count> <en>ShelfCount</en><th>ShelfCount</th></count>
+<minute><en>Minute</en><th>นาที</th></minute>
+<datafail><en>Please fill in the information correctly.</en><th>กรูณากรอกข้อมูลให้ถูกต้อง</th></datafail>
+<savedoc><en>Save Doc</en><th>บันทึกเอกสาร</th></savedoc>
+<updateprice><en>Update price</en><th>อัพเดทราคา</th></updateprice>
+<day><en>Day</en><th>วัน</th></day>
+<set><en>Set Change Of Price</en><th>กำหนดเวลาเปลี่ยนราคา</th></set>
+<dateP><en>Date OF UPD PC.</en><th>วันที่อัพเดทราคา</th></dateP>
+<activemail><en>Main Email</en><th>Main Email</th></activemail>
+<img><en>Profile Image</en><th>ภาพโปรไฟล์</th></img>
+<addfailedmsg><en>addfailed</en><th>ไม่สามารถเพิ่มข้อมูลได้</th></addfailedmsg>
+<adduserfailedmsg><en>addfailed</en><th>มีชื่อผู้ใช้งานนี้อยู่ในระบบแล้ว</th></adduserfailedmsg>
+<adduserfailed><en>Cannot add more than 2 contacts</en><th>ไม่สามารถเพิ่มข้อมูลผู้ติดต่อได้เกิน 2 คน</th></adduserfailed>
+<adduserfacfailed><en>Cannot add more than 1 contacts</en><th>ไม่สามารถเพิ่มข้อมูลผู้ติดต่อได้เกิน 1 คน</th></adduserfacfailed>
+<editfailedmsg><en>editfailed</en><th>ไม่สามารถแก้ไขข้อมูลได้</th></editfailedmsg>
+<editfailDueedmsg><en>Cannot add information Due to the duplicate department</en><th>ไม่สามารถเพิ่มข้อมูลได้ เนื่องจากแผนกซ้ำ</th></editfailDueedmsg>
+<editfailcolor><en>Cannot add information Due to the duplicate code color</en><th>ไม่สามารถเพิ่มข้อมูลได้ เนื่องจากรหัสสีซ้ำ</th></editfailcolor>
+<editcenterfailedmsg><en>There are 1 central department</en><th>แผนกศูนย์กลางมีได้เพียง 1 แผนก</th></editcenterfailedmsg>
+<Repeatmsg><en>Repeat code number</en><th>เลขรหัสซํ้า</th></Repeatmsg>
+<sizeunit><en>Size</en><th>ขนาดไซต์</th></sizeunit>
+<widthunit><en>Measurement</en><th>มาตรวัด</th></widthunit>
+<searchuser><en>search user</en><th>ค้นหาจาก ชื่อ - สกุล</th></searchuser>
+<errorpic><en>Please Choose Picture</en><th>กรุณาเลือกรูปภาพ</th></errorpic>
+<formatdate><en>Format Date</en><th>รูปแบบวันที่</th></formatdate>
+<format><en>Format</en><th>รูปแบบ</th></format>
+<year><en>Year</en><th>ปี</th></year>
+<ContractName><en>Contact name</en><th>ผู้ติดต่อ</th></ContractName>
+<Position><en>Position</en><th>ตำแหน่ง</th></Position>
+<phone><en>Phone number</en><th>เบอร์โทรศัพท์</th></phone>
+<adduser><en>Add user</en><th>เพิ่มผู้ติดต่อ</th></adduser>
+<adduser2><en>Add user2</en><th>เพิ่มผู้ติดต่อ2</th></adduser2>
+<Measurementcode><en>Measurement code</en><th>รหัสหน่วยนับ</th></Measurementcode>
+<oneday><en>One Day</en><th>หนึ่งวัน</th></oneday>
+<manyday><en>Several Day</en><th>หลายวัน</th></manyday>
+<onemonth><en>One Month</en><th>หนึ่งเดือน</th></onemonth>
+<manymonth><en>Several Month</en><th>หลายเดือน</th></manymonth>
+<month><en>Month</en><th>เดือน</th></month>
+<serchref><en>serchref</en><th>ค้นหาเอกสารอ้างอิง</th></serchref>
+<youlogout><en>Do you want to logout ?</en><th>คุณต้องการออกจากระบบหรือไม่</th></youlogout>
+<formatmonth><en>Format month</en><th>รูปแบบเดือน</th></formatmonth>
+<image><en>Image</en><th>รูปภาพ</th></image>
+<typereport><en>Type Report</en><th>ประเภทเอกสาร : </th></typereport>
+<datefound><en>Format date is Worng!</en><th>รูปแบบวันที่ไม่ถูกต้อง!</th></datefound>
+<spacial><en>Clean</en><th>ผ้าสะอาด</th></spacial>
+<newitem><en>New item</en><th>รายการใหม่</th></newitem>
+<editTime_deli><en>Edit shipping time</en><th>แก้ไขระยะเวลาขนส่ง</th></editTime_deli>
+<TimeSC><en>Cycle time</en><th>เวลาขนส่ง</th></TimeSC>
+<TimeSCcount><en>ShelfCount time</en><th>เวลานับผ้า</th></TimeSCcount>
+<addTime_deli><en>Add shipping time</en><th>เพิ่มระยะเวลาขนส่ง</th></addTime_deli>
+<AllFac><en>All Factory</en><th>ทุกโรงซัก</th></AllFac>
+<noFac><en>no factory</en><th>ไม่มีโรงซักที่ยังไม่ได้เพิ่ม</th></noFac>
+<itemset><en>Item set</en><th>เซ็ทรายการ</th></itemset>
+<itemmas><en>Master</en><th>รายการเซ็ต</th></itemmas>
+<isset><en>This item in another set you want to Delete?</en><th>รายการนี้อยู่ในเซ็ทรายการอื่น คุณต้องการลบออกหรือไม่</th></isset>
+<ismaster><en>This item in Master you want to Delete?</en><th>รายการนี้เป็นรายการมาสเตอร์ คุณต้องการลบข้อมูลทั้งหมดหรือไม่</th></ismaster>
+<issetb><en>This item in another set you want to change set item?</en><th>รายการนี้อยู่ในเซ็ทรายการอื่น คุณต้องการเปลี่ยนเซ็ทรายการหรือไม่</th></issetb>
+<updatestock><en>Update Stock</en><th>อัพเดทคลัง</th></updatestock>
+<settime><en>Cycle time</en><th>รอบส่งผ้า</th></settime>
+<settimefac><en>Cycle time Factory</en><th>รอบส่งผ้าโรงซัก</th></settimefac>
+<setcount><en>ShelfCount time</en><th>รอบนับผ้า</th></setcount>
+<dte><en>Deleted</en><th>ลบสำเร็จ</th></dte>
+<excel><en>Linen Stock Count</en><th>แบบฟอร์มการนับสต๊อก</th></excel>
+<updatesuccess><en>Update Success</en><th>อัพเดทคลังสำเร็จ</th></updatesuccess>
+<searchexcel><en>Search For Date</en><th>ค้นหาตามวันที่</th></searchexcel>
+<upload><en>Upload File</en><th>อัพโหลดไฟล์</th></upload>
+<download><en>Download File</en><th>ดาวน์โหลดไฟล์</th></download>
+<deletefile><en>Delete File</en><th>ลบไฟล์</th></deletefile>
+<uploadsuc><en>Upload File Success</en><th>อัพโหลดไฟล์สำเร็จ</th></uploadsuc>
+<thperfix><en>Th Perfix</en><th>คำนำหน้าไทย</th></thperfix>
+<engperfix><en>Eng Perfix</en><th>คำนำหน้าอังกฤษ</th></engperfix>
+<nameeng><en>Eng Name-Lastname</en><th>ชื่อ-สกุล อังกฤษ</th></nameeng>
+<nameth><en>TH Name-Lastname</en><th>ชื่อ-สกุล ไทย</th></nameth>
+<remask><en>Remask</en><th>หมายเหตุ</th></remask>
+<depfrom><en>Department From</en><th>แผนกส่งคืน</th></depfrom>
+<depto><en>Department To</en><th>แผนกรับกลับ</th></depto>
+<Roundfactory><en>Round factory</en><th>รอบเวลาโรงซัก</th></Roundfactory>
+<to><en>to</en><th>ถึง</th></to>
+
+<!-- -->
+<r0><en>Please choose Report</en><th>กรุณาเลือกรายงาน</th></r0>
+<r1><en>Report Dirty linen Weight</en><th>รายงานบันทึกการส่งผ้าเปื้อน</th></r1>
+<r3><en>Report Cleaned Linen Weight</en><th>รายงานบันทึกการรับผ้าสะอาด</th></r3>
+<r2><en>Report Claim</en><th>รายงานบันทึกผ้าส่งเคลม</th></r2>
+<r4><en>Daily issue Request</en><th>ใบรายการจ่ายผ้าประจำวัน</th></r4>
+<r5><en>Report Operations Time Spend</en><th>Report Operations Time Spend</th></r5>
+<r6><en>Report Rewash</en><th>รายงานบันทึกผ้าแก้ไข</th></r6>
+<r7><en>Report Shot and Over item</en><th>รายงานบันทึกผ้าขาด และผ้าเกินจากยอด</th></r7>
+<r8><en>Report Soiled Clean Ratio</en><th>รายงานส่งผ้าเปื้อน-รับผ้าสะอาด</th></r8>
+<r9><en>Report Stock Count</en><th>รายงานสต๊อกคงคลัง</th></r9>
+<r10><en>Report Billing Claim</en><th>Report Billing Claim</th></r10>
+<r11><en>Report Billing Customer</en><th>Report Billing Customer</th></r11>
+<r12><en>Report Billing Factory</en><th>Report Billing Factory</th></r12>
+<r13><en>Report Summary Dirty</en><th>รายงานรวมบันทึกการแปรรูปผ้าสกปรก</th></r13>
+<r14><en>Report Summary</en><th>รายงานสรุปราคาการส่งผ้า</th></r14>
+<r15><en>Report Tracking status for laundry plant</en><th>รายงานการติดตามสถานะรายการผ้าจากโรงซัก</th></r15>
+<r16><en>Report Tracking status for linen operation</en><th>Report Tracking status for linen operation</th></r16>
+<r17><en>Report Damage And Loss</en><th>รายงานสรุปยอดผ้าถูกซ่อมและผ้าสูญหาย</th></r17>
+<r18><en>Report Tracking status for linen operation By Ward</en><th>รายงานการติดตามการจัดจ่ายผ้าโดยอิงจากแผนก</th></r18>
+<r19><en>Report Tracking status for linen operation By User</en><th>รายงานการติดตามการจัดจ่ายผ้าโดยอิงจากผู้ใช้</th></r19>
+<r20><en>Report Summary billing</en><th>รายงานสรุปค่าบริการรับ-ส่งผ้าประจำเดือน</th></r20>
+<r21><en>Report T-das</en><th>รายงาน T-das</th></r21>
+<r22><en>Report New Linen</en><th>รายงานแบบบันทึกการส่งซักผ้าใหม่ให้โรงซัก</th></r22>
+<r23><en>Report Damage NHealth </en><th>รายงานผ้าชำรุด NHealth</th></r23>
+<r24><en>Report Claim Factory</en><th>รายงานเคลมโรงซัก</th></r24>
+<r25><en>Report_QC_Process_checklist_Dirty</en><th>Report_QC_Process_checklist_Dirty</th></r25>
+<r26><en>Report_QC_Process_checklist_clean1</en><th>Report_QC_Process_checklist_clean1</th></r26>
+<r27><en>Report_QC_Process_checklist_clean2</en><th>Report_QC_Process_checklist_clean2</th></r27>
+<r28><en>Report_billing</en><th>Report_billing</th></r28>
+<r29><en>Report Summary</en><th>Report Summary</th></r29>
+<r30><en>Report Usage Detail</en><th>Report Usage Detail</th></r30>
+<r31><en>Report_billing_category</en><th>Report_billing_category</th></r31>
+<r32><en>รายงานการรับคืนผ้าจากแผนก</en><th>Report_return_linen</th></r32>
+<DM><en>Report Damage NHealth </en><th>รายงานผ้าชำรุด NHealth</th></DM>
+<!--  -->
+<pleaseday><en>-----Please Choose Date------</en><th>-----กรุณาเลือกวันที่-----</th></pleaseday>
+<pleasemonth><en>-----Please Choose Month------</en><th>-----กรุณาเลือกเดือน-----</th></pleasemonth>
+<pleaseyear><en>-----Please Choose Year------</en><th>-----กรุณาเลือกปี-----</th></pleaseyear>
+<pleasehot><en>-----Please Choose Hospital------</en><th>-----กรุณาเลือกโรงพยาบาล-----</th></pleasehot>
+
+</lang>

@@ -1,0 +1,482 @@
+  .table th, .table td {
+    border-top: none !important;
+  }
+      /* css for menu */
+      .swal2-popup{
+        width: 450px !important;
+        padding: 20px !important;
+        background: rgb(255, 255, 255) !important;
+        display: flex !important;
+      }
+      .btn{
+            padding: 0px;
+      }
+      .menu button{
+        text-decoration: none;
+        font-size: 23px;
+        color: #2c3e50;
+        display: block;
+        background: none !important;
+        box-shadow:none !important;
+      }
+      .mhee button:hover {
+        color: #2c3e50;
+        font-weight:bold;
+        /* font-size:26px; */
+        /* transition: width 2s, height 4s; */
+      }
+      .menu{
+        width:140px;
+        text-align:center;
+      }
+      .menu button{
+        width:140px;
+        text-align:center;
+      }
+      /* ---------------------- */
+      .menu2 button{
+        text-decoration: none;
+        font-size: 23px;
+        color: #2c3e50;
+        display: block;
+        background: none !important;
+        box-shadow:none !important;
+      }
+      .menu2 button:hover {
+        color: #2c3e50;
+        font-weight:bold;
+        /* font-size:26px; */
+        transition: width 2s, height 4s;
+      }
+      .menu2{
+        width:140px;
+        text-align:center;
+      }
+      .menu2 button{
+        width:140px;
+        text-align:center;
+      }
+      /* ----------------------------- */
+      .circle1 i{
+        width: 40px;
+        height: 40px;
+        border-radius:50px;
+        background-color:#298fc2;
+      }
+      .circle1 i{
+        padding: 7px;
+        color:#ffffff;
+      }
+      .circle2{
+        width: 40px;
+        height: 40px;
+        border-radius:50px;
+        background-color:#23C4A5;		
+        ;
+      }
+      .circle22 i{
+        padding: 7px;
+        color:#ffffff;
+      }
+      .circle22{
+        width: 38px;
+        height: 38px;
+        border-radius:50px;
+        background-color:#23C4A5;		
+        ;
+      }
+      .circle2 i{
+        padding: 7px;
+        color:#ffffff;
+      }
+      .circle3{
+        width: 40px;
+        height: 40px;
+        border-radius:50px;
+        background-color:rgb(189,48,44);
+      }
+      .circle3 i{
+        padding: 7px;
+        color:#ffffff;
+      }
+      .circle4{
+        width: 40px;
+        height: 40px;
+        border-radius:50px;
+        background-color:#7ED86F;
+      }
+      .circle4 i{
+        padding: 7px;
+        color:#ffffff;
+      }
+      .circle5{
+        width: 40px;
+        height: 40px;
+        border-radius:50px;
+        background-color:#ff585d;
+      }
+      .circle5 i{
+        padding: 7px;
+        color:#ffffff;
+      }
+      
+      .circle6{
+        width: 40px;
+        height: 40px;
+        border-radius:50px;
+        background-color:rgba(246,141,46);
+      }
+
+      .circle9 i{
+        padding: 7px;
+        color:#ffffff;
+      }
+      .circle9{
+        width: 40px;
+        height: 40px;
+        border-radius:50px;
+        background-color:#C88242;
+      }
+      .circle6 i{
+        padding: 7px;
+        color:#ffffff;
+      }
+      
+      .circle7{
+        width: 40px;
+        height: 40px;
+        border-radius:50px;
+        background-color:rgb(112,88,224);
+      }
+      .circle7 i{
+        padding: 7px;
+        color:#ffffff;
+      }
+      .circle8{
+        width: 40px;
+        height: 40px;
+        border-radius:50px;
+        background-color: #64CCC9;
+      }
+      .circle8 i{
+        padding: 7px;
+        color:#ffffff;
+      }
+      .circle10{
+        width: 40px;
+        height: 40px;
+        border-radius:50px;
+        background-color:#A4493D;
+      }
+      .circle10 i{
+        padding: 7px;
+        color:#ffffff;
+      }
+      .circle11{
+        width: 40px;
+        height: 40px;
+        border-radius:50px;
+        background-color:#E09517;
+      }
+      .circle11 i{
+        padding: 7px;
+        color:#ffffff;
+      }
+
+      .circle12 i{
+        width: 40px;
+        height: 40px;
+        border-radius:50px;
+        background-color:#0000CC;
+      }
+      .circle12 i{
+        padding: 7px;
+        color:#ffffff;
+      }
+      .circle13 i{
+        width: 40px;
+        height: 40px;
+        border-radius:50px;
+        background-color:#307FE2;;
+      }
+      .circle13 i{
+        padding: 7px;
+        color:#ffffff;
+      }
+      .menuMini button{
+        text-decoration: none;
+        font-size: 23px;
+        color: #2c3e50;
+        display: block;
+        background: none !important;
+        box-shadow:none !important;
+      }
+      .mhee1 button:hover {
+        color: #2c3e50;
+        font-weight:bold;
+        font-size:26px;
+        transition: width 2s, height 4s;
+      }
+      .menuMini{
+        width:85px;
+        text-align:center;
+      }
+      
+      i{
+        -webkit-transition: -webkit-transform .8s ease-in-out;
+          transition:transform .8s ease-in-out;
+      }
+      /* .menu i:hover{
+        -webkit-transform: rotate(360deg);
+          transform: rotate(360deg);
+      } */
+      /* end css for menu */
+      /* .search_custom i:hover{
+        -webkit-transform: rotate(360deg);
+          transform: rotate(360deg);
+      } */
+      .search_custom{
+        width:100px;
+        text-align:center;
+      }
+      .search_custom button{
+        text-decoration: none;
+        font-size: 23px;
+        color: #2c3e50;
+        display: block;
+        background: none !important;
+        box-shadow:none !important;
+      }
+      .search_custom button:hover {
+        color: #2c3e50;
+        font-weight:bold;
+        /* font-size:26px; */
+        transition: width 2s, height 4s;
+      }
+      /* .search_custom img{
+        width:40px;
+        height:40px;
+      } */
+      .search_custom button{
+        width:60px;
+        text-align:center;
+      }
+      .search_1{
+        width: 38px;
+        height: 38px;
+        border-radius:50px;
+        background-color: #307FE2;
+      }
+      .search_1 i{
+        color:#ffffff;
+        padding: 5px;
+      }
+      .search_1 i:hover{
+        transition: width 2s, height 4s;
+      }
+            
+      .search_2{
+        width: 40px;
+        height: 40px;
+        border-radius:50px;
+        background-color:#FFCCCC	;
+      }
+      .search_2{
+        color:#ffffff;
+      }
+      .import_1 i{
+        width: 38px;
+        height: 38px;
+        border-radius:50px;
+        background-color: #878687;
+      }
+      .import_1 i{
+        color:#ffffff;
+      }
+
+
+      .search_custom .save_1{
+        width: 38px;
+        height: 38px;
+        border-radius:50px;
+        background-color: #27ae60;
+      }
+      .search_custom .save_1{
+        color:#ffffff;
+      }
+      .search_custom .del_1{
+        width: 38px;
+        height: 38px;
+        border-radius:50px;
+        background-color: #eb4d4b;
+      }
+      .search_custom .del_1{
+        color:#ffffff;
+      }
+
+
+
+      
+    .white{
+      color: #fff !important;
+    }
+    .white:hover{
+      color: #fff;
+    }
+
+    #tableSort a{
+      color: #818181;
+    }
+input,select{
+  padding-bottom: 0px !important;
+  padding-top: 0px !important;
+}
+  /* ---------------------------------------------------------------- */
+  /* input[type="radio"] {
+    width: 100%;
+    height: 17px;
+    margin-top: 1%;
+  } */
+  .container {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 22px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  
+  /* Hide the browser's default radio button */
+  .container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+  }
+  
+  /* Create a custom radio button */
+  .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 15px;
+    width: 15px;
+    background-color: rgb(168, 167, 167);
+    border-radius: 50%;
+  }
+  
+  /* On mouse-over, add a grey background color */
+  .container:hover input ~ .checkmark {
+    background-color: #ccc;
+  }
+  
+  /* When the radio button is checked, add a blue background */
+  .container input:checked ~ .checkmark {
+    background-color: #1659a2;
+  }
+  
+  /* Create the indicator (the dot/circle - hidden when not checked) */
+  .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+  
+  /* Show the indicator (dot/circle) when checked */
+  .container input:checked ~ .checkmark:after {
+    display: block;
+  }
+  
+  /* Style the indicator (dot/circle) */
+  /* .container .checkmark:after {
+    top: 6px;
+    left: 6px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: white;
+  } */
+
+
+  .radio {
+    margin: 16px 0;
+    display: block;
+    cursor: pointer;
+  }
+  .radio input {
+    display: none;
+  }
+  .radio input + span {
+    line-height: 22px;
+    height: 22px;
+    padding-left: 22px;
+    display: block;
+    position: relative;
+  }
+  .radio input + span:not(:empty) {
+    padding-left: 30px;
+  }
+  .radio input + span:before, .radio input + span:after {
+    content: '';
+    width: 22px;
+    height: 22px;
+    display: block;
+    border-radius: 50%;
+    left: 0;
+    top: 0;
+    position: absolute;
+  }
+  .radio input + span:before {
+    background: #D1D7E3;
+    transition: background 0.2s ease, -webkit-transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 2);
+    transition: background 0.2s ease, transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 2);
+    transition: background 0.2s ease, transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 2), -webkit-transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 2);
+  }
+  .radio input + span:after {
+    background: #fff;
+    -webkit-transform: scale(0.78);
+            transform: scale(0.78);
+    transition: -webkit-transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.4);
+    transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.4);
+    transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.4), -webkit-transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.4);
+  }
+  .radio input:checked + span:before {
+    -webkit-transform: scale(1.04);
+            transform: scale(1.04);
+    background: #5D9BFB;
+  }
+  .radio input:checked + span:after {
+    -webkit-transform: scale(0.4);
+            transform: scale(0.4);
+    transition: -webkit-transform .3s ease;
+    transition: transform .3s ease;
+    transition: transform .3s ease, -webkit-transform .3s ease;
+  }
+  .radio:hover input + span:before {
+    -webkit-transform: scale(0.92);
+            transform: scale(0.92);
+  }
+  .radio:hover input + span:after {
+    -webkit-transform: scale(0.74);
+            transform: scale(0.74);
+  }
+  .radio:hover input:checked + span:after {
+    -webkit-transform: scale(0.4);
+            transform: scale(0.4);
+  }
+
+  /* .form-control:disabled, .form-control[readonly] {
+    background-color: transparent !important;
+    opacity: 1;
+    cursor:no-drop;
+
+} */
+
+.icon_select  {
+  -moz-appearance:none; /* Firefox */
+  -webkit-appearance:none; /* Safari and Chrome */
+  appearance:none;
+}
