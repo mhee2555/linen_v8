@@ -4,7 +4,7 @@ $Userid = $_SESSION['Userid'];
 $PmID= $_SESSION['PmID'];
 $TimeOut = $_SESSION['TimeOut'];
 $last_move = $_GET["last_move"];
-
+// 
 if($Userid==""){
    header("location:index.html");
 }
