@@ -225,25 +225,41 @@ function find_item($conn, $DATA)
   $lang = $_SESSION["lang"];
   $DepCode = $DATA['DepCode'];
   $hotpital = $DATA['hotpital'];
-  $radioFormat = $DATA["radioFormat"];
   $formatDay = $DATA["formatDay"];
-  $oneday = $DATA["oneday"];
-  $someday = $DATA["someday"];
   $onemonth = $DATA["onemonth"];
-
-  $oneday = explode('-', $oneday);
-  if ($lang ==  'th') {
-    $oneday = ($oneday[2] - 543) . "-" . $oneday[1] . "-" . $oneday[0];
+  // $radioFormat = $DATA["radioFormat"];
+  if (isset($DATA["radioFormat"])) {
+    $radioFormat = $DATA["radioFormat"];
   } else {
-    $oneday = ($oneday[2] + 543) . "-" . $oneday[1] . "-" . $oneday[0];
+    $radioFormat = "";
   }
 
-  $someday = explode('-', $someday);
-  if ($lang ==  'th') {
-    $someday = ($someday[2] - 543) . "-" . $someday[1] . "-" . $someday[0];
+  if ($DATA["oneday"] != "") {
+    $oneday = $DATA["oneday"];
+
+
+    $oneday = explode('-', $oneday);
+    if ($lang ==  'th') {
+      $oneday = ($oneday[2] - 543) . "-" . $oneday[1] . "-" . $oneday[0];
+    } else {
+      $oneday = ($oneday[2] + 543) . "-" . $oneday[1] . "-" . $oneday[0];
+    }
   } else {
-    $someday = ($someday[2] + 543) . "-" . $someday[1] . "-" . $someday[0];
+    $oneday = "";
   }
+  if ($DATA["someday"] != "") {
+    $someday = $DATA["someday"];
+    $someday = explode('-', $someday);
+    if ($lang ==  'th') {
+      $someday = ($someday[2] - 543) . "-" . $someday[1] . "-" . $someday[0];
+    } else {
+      $someday = ($someday[2] + 543) . "-" . $someday[1] . "-" . $someday[0];
+    }
+  } else {
+    $someday = "";
+  }
+
+
   $wheredep = "";
   if ($DepCode != "ALL") {
     $wheredep = "AND report_sc.DepCode = '$DepCode'";
@@ -257,16 +273,19 @@ function find_item($conn, $DATA)
       $whereDate = "AND shelfcount.DocDate BETWEEN '$oneday'  AND '$someday' ";
     }
   } else {
-    $onemonth = newMonth($onemonth);
-    $onemonth = explode('-', $onemonth);
-    if ($lang ==  'th') {
-      $month = $onemonth[1];
-      $year = ($onemonth[0] - 543);
-    } else {
-      $month = $onemonth[1];
-      $year = ($onemonth[0] + 543);
+    $whereDate = "";
+    if ($onemonth != "") {
+      $onemonth = newMonth($onemonth);
+      $onemonth = explode('-', $onemonth);
+      if ($lang ==  'th') {
+        $month = $onemonth[1];
+        $year = ($onemonth[0] - 543);
+      } else {
+        $month = $onemonth[1];
+        $year = ($onemonth[0] + 543);
+      }
+      $whereDate = "AND MONTH(shelfcount.DocDate) = '$month' AND YEAR(shelfcount.DocDate) = '$year'";
     }
-    $whereDate = "AND MONTH(shelfcount.DocDate) = '$month' AND YEAR(shelfcount.DocDate) = '$year'";
   }
 
   $Sql = "SELECT
@@ -408,11 +427,11 @@ function find_report($conn, $DATA)
   $DepCode = $DATA['DepCode'] == null ? $_SESSION['DepCode'] : $DATA['DepCode'];
   $typeReport = $DATA['typeReport'];
   $Format = $DATA['Format'];
-  isset( $DATA['FormatDay'] ) ? $FormatDay = $DATA['FormatDay']  : $FormatDay = "";
-  isset( $DATA['FormatMonth'] ) ? $FormatMonth = $DATA['FormatMonth']  : $FormatMonth = "";
-  isset( $DATA['date'] ) ? $date = $DATA['date']  : $date = "";
-  isset( $DATA['cycle'] ) ? $cycle = $DATA['cycle']  : $cycle = "";
-  isset( $DATA['ppu'] ) ? $ppu = $DATA['ppu']  : $ppu = "";
+  isset($DATA['FormatDay']) ? $FormatDay = $DATA['FormatDay']  : $FormatDay = "";
+  isset($DATA['FormatMonth']) ? $FormatMonth = $DATA['FormatMonth']  : $FormatMonth = "";
+  isset($DATA['date']) ? $date = $DATA['date']  : $date = "";
+  isset($DATA['cycle']) ? $cycle = $DATA['cycle']  : $cycle = "";
+  isset($DATA['ppu']) ? $ppu = $DATA['ppu']  : $ppu = "";
   $GroupCode = $DATA['GroupCode'];
   $category = $DATA['category'];
   $Item = $DATA['Item'];
@@ -1164,7 +1183,7 @@ function find_report($conn, $DATA)
         $return = r38($conn, $HptCode, $FacCode, $date1, $date2, $Format, $DepCode, $GroupCode, $Item, $type_usage_detail, 'monthbetween');
       }
     }
-  } else if ($typeReport == 39 ) {
+  } else if ($typeReport == 39) {
     if ($Format == 1 || $Format == 3) {
       if ($FormatDay == 1 || $Format == 3) {
         $date1 = $date;
@@ -1224,9 +1243,13 @@ function newDate2($date)
 }
 function newMonth($date)
 {
-  $mount = explode('-', $date);
-  $chk = chk_mount($mount[0]);
-  $date1 = $mount[1] . '-' . $chk;
+  $date1 = "";
+  if ($date != "") {
+    $mount = explode('-', $date);
+    $chk = chk_mount($mount[0]);
+    $date1 = $mount[1] . '-' . $chk;
+  }
+
   return $date1;
 }
 function newMonth1($date)
@@ -1245,26 +1268,25 @@ function newMonth2($date)
   $date2 = $month2[1] . '-' . $numMonth;
   return $date2;
 }
-function subMonth($date1,$date2)
+function subMonth($date1, $date2)
 {
   // echo $date1;
   // echo $date2;
 
 
 
-  if($date1 != ""){
+  if ($date1 != "") {
     $month1 = explode('-', $date1);
     $year1 = trim($month1[0]);
     $date1 = trim($month1[1]);
 
     $date['year1'] = $year1;
     $date['date1'] = $date1;
-
   }
 
 
 
-  if($date2 != ""){
+  if ($date2 != "") {
     $month2 = explode('-', $date2);
     $date2 = trim($month2[1]);
     $year2 = trim($month2[0]);
@@ -1419,11 +1441,11 @@ function r1($conn, $HptCode, $FacCode, $date1, $date2, $Format, $DepCode, $time_
               ORDER BY dirty.DocDate ASC limit 1";
     }
   } else if ($Format == 2) {
-    $date = subMonth($date1,$date2);
-        isset( $date['year1'] ) ? $year1 = $date['year1']  : $year1 = "";
-        isset( $date['year2'] ) ? $year2 = $date['year2']  : $year2 = "";
-        isset( $date['date1'] ) ? $date1 = $date['date1']  : $date1 = "";
-        isset( $date['date2'] ) ? $date2 = $date['date2']  : $date2 = "";
+    $date = subMonth($date1, $date2);
+    isset($date['year1']) ? $year1 = $date['year1']  : $year1 = "";
+    isset($date['year2']) ? $year2 = $date['year2']  : $year2 = "";
+    isset($date['date1']) ? $date1 = $date['date1']  : $date1 = "";
+    isset($date['date2']) ? $date2 = $date['date2']  : $date2 = "";
     if ($chk == 'month') {
       $Sql = "SELECT  
       MONTH(dirty.DocDate) AS DocDate1,
@@ -1566,10 +1588,10 @@ function r2($conn, $HptCode, $FacCode, $date1, $date2, $Format, $DepCode, $chk)
     }
   } else if ($Format == 2) {
     $date = subMonth($date1, $date2);
-        isset( $date['year1'] ) ? $year1 = $date['year1']  : $year1 = "";
-        isset( $date['year2'] ) ? $year2 = $date['year2']  : $year2 = "";
-        isset( $date['date1'] ) ? $date1 = $date['date1']  : $date1 = "";
-        isset( $date['date2'] ) ? $date2 = $date['date2']  : $date2 = "";
+    isset($date['year1']) ? $year1 = $date['year1']  : $year1 = "";
+    isset($date['year2']) ? $year2 = $date['year2']  : $year2 = "";
+    isset($date['date1']) ? $date1 = $date['date1']  : $date1 = "";
+    isset($date['date2']) ? $date2 = $date['date2']  : $date2 = "";
 
     if ($chk == 'month') {
       $Sql = "SELECT department.DepName, 
@@ -1698,10 +1720,10 @@ function r3($conn, $HptCode, $FacCode, $date1, $date2, $Format, $DepCode, $chk)
     }
   } else if ($Format == 2) {
     $date = subMonth($date1, $date2);
-        isset( $date['year1'] ) ? $year1 = $date['year1']  : $year1 = "";
-        isset( $date['year2'] ) ? $year2 = $date['year2']  : $year2 = "";
-        isset( $date['date1'] ) ? $date1 = $date['date1']  : $date1 = "";
-        isset( $date['date2'] ) ? $date2 = $date['date2']  : $date2 = "";
+    isset($date['year1']) ? $year1 = $date['year1']  : $year1 = "";
+    isset($date['year2']) ? $year2 = $date['year2']  : $year2 = "";
+    isset($date['date1']) ? $date1 = $date['date1']  : $date1 = "";
+    isset($date['date2']) ? $date2 = $date['date2']  : $date2 = "";
 
     if ($chk == 'month') {
       $Sql = "SELECT factory.FacName, clean.DocDate, site.HptName
@@ -1817,11 +1839,11 @@ function r4($conn, $HptCode, $FacCode, $date1, $date2, $Format, $DepCode, $cycle
       AND shelfcount.isStatus <> 9  ";
     }
   } else if ($Format == 2) {
-    $date = subMonth($date1,$date2);
-    isset( $date['year1'] ) ? $year1 = $date['year1']  : $year1 = "";
-    isset( $date['year2'] ) ? $year2 = $date['year2']  : $year2 = "";
-    isset( $date['date1'] ) ? $date1 = $date['date1']  : $date1 = "";
-    isset( $date['date2'] ) ? $date2 = $date['date2']  : $date2 = "";
+    $date = subMonth($date1, $date2);
+    isset($date['year1']) ? $year1 = $date['year1']  : $year1 = "";
+    isset($date['year2']) ? $year2 = $date['year2']  : $year2 = "";
+    isset($date['date1']) ? $date1 = $date['date1']  : $date1 = "";
+    isset($date['date2']) ? $date2 = $date['date2']  : $date2 = "";
 
 
 
@@ -1830,12 +1852,10 @@ function r4($conn, $HptCode, $FacCode, $date1, $date2, $Format, $DepCode, $cycle
     if ($chk == 'month') {
       $Sql = "SELECT shelfcount.DocNo, DATE(shelfcount.complete_date) AS DocDate,
       TIME(shelfcount.complete_date) AS DocTime,
-      department.DepName
+      shelfcount.DepCode
       FROM shelfcount
-      INNER JOIN department ON shelfcount.DepCode = department.DepCode
       WHERE MONTH(shelfcount.complete_date) = '$date1'
       AND YEAR(shelfcount.complete_date) = '$year1'
-      AND department.HptCode = '$HptCode'
       $DepCode1
       AND shelfcount.SiteCode  = '$HptCode'
       AND shelfcount.isStatus <> 9 
@@ -1871,8 +1891,25 @@ function r4($conn, $HptCode, $FacCode, $date1, $date2, $Format, $DepCode, $cycle
   $return['urlxls'] = '../report_linen/excel/Report_Daily_issue_Request_xls.php';
   $meQuery = mysqli_query($conn, $Sql);
   while ($Result = mysqli_fetch_assoc($meQuery)) {
+    $_depCode = $Result['DepCode'];
+    
+
+    $dep = "SELECT
+    department.DepName 
+  FROM
+    department 
+  WHERE
+    department.DepCode = '$_depCode' 
+    AND department.HptCode = '$HptCode' LIMIT 1";
+
+
+    $meQuery1 = mysqli_query($conn, $dep);
+    $Result1 = mysqli_fetch_assoc($meQuery1);
+    $return[$count]['DepName'] = isset($Result1['DepName']) ? $Result1['DepName']  : "" ;
+    
+
     $return[$count]['DocNo'] = $Result['DocNo'];
-    $return[$count]['DepName'] = $Result['DepName'];
+    // $return[$count]['DepName'] = '232';
     list($y, $m, $d) = explode("-", $Result['DocDate']);
     if ($_SESSION['lang'] == 'th') {
       $y = $y + 543;
@@ -1934,10 +1971,10 @@ function r5($conn, $HptCode, $FacCode, $date1, $date2, $Format, $DepCode, $chk)
     }
   } else if ($Format == 2) {
     $date = subMonth($date1, $date2);
-        isset( $date['year1'] ) ? $year1 = $date['year1']  : $year1 = "";
-        isset( $date['year2'] ) ? $year2 = $date['year2']  : $year2 = "";
-        isset( $date['date1'] ) ? $date1 = $date['date1']  : $date1 = "";
-        isset( $date['date2'] ) ? $date2 = $date['date2']  : $date2 = "";
+    isset($date['year1']) ? $year1 = $date['year1']  : $year1 = "";
+    isset($date['year2']) ? $year2 = $date['year2']  : $year2 = "";
+    isset($date['date1']) ? $date1 = $date['date1']  : $date1 = "";
+    isset($date['date2']) ? $date2 = $date['date2']  : $date2 = "";
 
     if ($chk == 'month') {
       $Sql = "SELECT shelfcount.DocNo, DATE(shelfcount.complete_date) AS DocDate,
@@ -2037,10 +2074,10 @@ function r6($conn, $HptCode, $FacCode, $date1, $date2, $Format, $DepCode, $chk)
     }
   } else if ($Format == 2) {
     $date = subMonth($date1, $date2);
-    isset( $date['year1'] ) ? $year1 = $date['year1']  : $year1 = "";
-    isset( $date['year2'] ) ? $year2 = $date['year2']  : $year2 = "";
-    isset( $date['date1'] ) ? $date1 = $date['date1']  : $date1 = "";
-    isset( $date['date2'] ) ? $date2 = $date['date2']  : $date2 = "";
+    isset($date['year1']) ? $year1 = $date['year1']  : $year1 = "";
+    isset($date['year2']) ? $year2 = $date['year2']  : $year2 = "";
+    isset($date['date1']) ? $date1 = $date['date1']  : $date1 = "";
+    isset($date['date2']) ? $date2 = $date['date2']  : $date2 = "";
     if ($chk == 'month') {
       $Sql = "SELECT  factory.FacName, month(repair_wash.DocDate) AS DocDate,
       site.hptname,
@@ -2161,10 +2198,10 @@ function r7($conn, $HptCode, $FacCode, $date1, $date2, $Format, $DepCode, $chk)
     }
   } else if ($Format == 2) {
     $date = subMonth($date1, $date2);
-        isset( $date['year1'] ) ? $year1 = $date['year1']  : $year1 = "";
-        isset( $date['year2'] ) ? $year2 = $date['year2']  : $year2 = "";
-        isset( $date['date1'] ) ? $date1 = $date['date1']  : $date1 = "";
-        isset( $date['date2'] ) ? $date2 = $date['date2']  : $date2 = "";
+    isset($date['year1']) ? $year1 = $date['year1']  : $year1 = "";
+    isset($date['year2']) ? $year2 = $date['year2']  : $year2 = "";
+    isset($date['date1']) ? $date1 = $date['date1']  : $date1 = "";
+    isset($date['date2']) ? $date2 = $date['date2']  : $date2 = "";
 
     if ($chk == 'month') {
       $Sql = "SELECT
@@ -2283,10 +2320,10 @@ function r8($conn, $HptCode, $FacCode, $date1, $date2, $Format, $DepCode, $chk)
     }
   } else if ($Format == 2) {
     $date = subMonth($date1, $date2);
-        isset( $date['year1'] ) ? $year1 = $date['year1']  : $year1 = "";
-        isset( $date['year2'] ) ? $year2 = $date['year2']  : $year2 = "";
-        isset( $date['date1'] ) ? $date1 = $date['date1']  : $date1 = "";
-        isset( $date['date2'] ) ? $date2 = $date['date2']  : $date2 = "";
+    isset($date['year1']) ? $year1 = $date['year1']  : $year1 = "";
+    isset($date['year2']) ? $year2 = $date['year2']  : $year2 = "";
+    isset($date['date1']) ? $date1 = $date['date1']  : $date1 = "";
+    isset($date['date2']) ? $date2 = $date['date2']  : $date2 = "";
     if ($chk == 'month') {
       $Sql = "SELECT factory.FacName, 
       DATE(clean.DocDate) AS DocDate,
@@ -2462,10 +2499,10 @@ function r10($conn, $HptCode, $FacCode, $date1, $date2, $Format, $DepCode, $chk)
     }
   } else if ($Format == 2) {
     $date = subMonth($date1, $date2);
-        isset( $date['year1'] ) ? $year1 = $date['year1']  : $year1 = "";
-        isset( $date['year2'] ) ? $year2 = $date['year2']  : $year2 = "";
-        isset( $date['date1'] ) ? $date1 = $date['date1']  : $date1 = "";
-        isset( $date['date2'] ) ? $date2 = $date['date2']  : $date2 = "";
+    isset($date['year1']) ? $year1 = $date['year1']  : $year1 = "";
+    isset($date['year2']) ? $year2 = $date['year2']  : $year2 = "";
+    isset($date['date1']) ? $date1 = $date['date1']  : $date1 = "";
+    isset($date['date2']) ? $date2 = $date['date2']  : $date2 = "";
 
     if ($chk == 'month') {
       $Sql = "SELECT
@@ -2571,10 +2608,10 @@ function r11($conn, $HptCode, $FacCode, $date1, $date2, $Format, $DepCode, $chk)
     }
   } else if ($Format == 2) {
     $date = subMonth($date1, $date2);
-        isset( $date['year1'] ) ? $year1 = $date['year1']  : $year1 = "";
-        isset( $date['year2'] ) ? $year2 = $date['year2']  : $year2 = "";
-        isset( $date['date1'] ) ? $date1 = $date['date1']  : $date1 = "";
-        isset( $date['date2'] ) ? $date2 = $date['date2']  : $date2 = "";
+    isset($date['year1']) ? $year1 = $date['year1']  : $year1 = "";
+    isset($date['year2']) ? $year2 = $date['year2']  : $year2 = "";
+    isset($date['date1']) ? $date1 = $date['date1']  : $date1 = "";
+    isset($date['date2']) ? $date2 = $date['date2']  : $date2 = "";
     if ($chk == 'month') {
       $Sql = "SELECT
               site.HptName ,
@@ -2685,10 +2722,10 @@ function r12($conn, $HptCode, $FacCode, $date1, $date2, $Format, $DepCode, $chk)
     }
   } else if ($Format == 2) {
     $date = subMonth($date1, $date2);
-        isset( $date['year1'] ) ? $year1 = $date['year1']  : $year1 = "";
-        isset( $date['year2'] ) ? $year2 = $date['year2']  : $year2 = "";
-        isset( $date['date1'] ) ? $date1 = $date['date1']  : $date1 = "";
-        isset( $date['date2'] ) ? $date2 = $date['date2']  : $date2 = "";
+    isset($date['year1']) ? $year1 = $date['year1']  : $year1 = "";
+    isset($date['year2']) ? $year2 = $date['year2']  : $year2 = "";
+    isset($date['date1']) ? $date1 = $date['date1']  : $date1 = "";
+    isset($date['date2']) ? $date2 = $date['date2']  : $date2 = "";
     if ($chk == 'month') {
       $Sql = "SELECT
               site.HptName ,
@@ -2792,10 +2829,10 @@ function r14($conn, $HptCode, $FacCode, $date1, $date2, $Format, $DepCode, $chk)
     }
   } else if ($Format == 2) {
     $date = subMonth($date1, $date2);
-        isset( $date['year1'] ) ? $year1 = $date['year1']  : $year1 = "";
-        isset( $date['year2'] ) ? $year2 = $date['year2']  : $year2 = "";
-        isset( $date['date1'] ) ? $date1 = $date['date1']  : $date1 = "";
-        isset( $date['date2'] ) ? $date2 = $date['date2']  : $date2 = "";
+    isset($date['year1']) ? $year1 = $date['year1']  : $year1 = "";
+    isset($date['year2']) ? $year2 = $date['year2']  : $year2 = "";
+    isset($date['date1']) ? $date1 = $date['date1']  : $date1 = "";
+    isset($date['date2']) ? $date2 = $date['date2']  : $date2 = "";
     if ($chk == 'month') {
       $Sql = "SELECT 	department.DepName,DocDate,site.HptName
       FROM shelfcount
@@ -2908,10 +2945,10 @@ function r13($conn, $HptCode, $FacCode, $date1, $date2, $Format, $DepCode, $ppu,
     }
   } else if ($Format == 2) {
     $date = subMonth($date1, $date2);
-        isset( $date['year1'] ) ? $year1 = $date['year1']  : $year1 = "";
-        isset( $date['year2'] ) ? $year2 = $date['year2']  : $year2 = "";
-        isset( $date['date1'] ) ? $date1 = $date['date1']  : $date1 = "";
-        isset( $date['date2'] ) ? $date2 = $date['date2']  : $date2 = "";
+    isset($date['year1']) ? $year1 = $date['year1']  : $year1 = "";
+    isset($date['year2']) ? $year2 = $date['year2']  : $year2 = "";
+    isset($date['date1']) ? $date1 = $date['date1']  : $date1 = "";
+    isset($date['date2']) ? $date2 = $date['date2']  : $date2 = "";
     if ($chk == 'month') {
       $Sql = "SELECT 	factory.FacName,
       site.HptName ,
@@ -3072,10 +3109,10 @@ function r15($conn, $HptCode, $FacCode, $date1, $date2, $Format, $DepCode, $chk)
     }
   } else if ($Format == 2) {
     $date = subMonth($date1, $date2);
-        isset( $date['year1'] ) ? $year1 = $date['year1']  : $year1 = "";
-        isset( $date['year2'] ) ? $year2 = $date['year2']  : $year2 = "";
-        isset( $date['date1'] ) ? $date1 = $date['date1']  : $date1 = "";
-        isset( $date['date2'] ) ? $date2 = $date['date2']  : $date2 = "";
+    isset($date['year1']) ? $year1 = $date['year1']  : $year1 = "";
+    isset($date['year2']) ? $year2 = $date['year2']  : $year2 = "";
+    isset($date['date1']) ? $date1 = $date['date1']  : $date1 = "";
+    isset($date['date2']) ? $date2 = $date['date2']  : $date2 = "";
     if ($chk == 'month') {
       $Sql = "SELECT
             process.DocNo,
@@ -3229,10 +3266,10 @@ function r16($conn, $HptCode, $FacCode, $date1, $date2, $Format, $DepCode, $chk)
     }
   } else if ($Format == 2) {
     $date = subMonth($date1, $date2);
-        isset( $date['year1'] ) ? $year1 = $date['year1']  : $year1 = "";
-        isset( $date['year2'] ) ? $year2 = $date['year2']  : $year2 = "";
-        isset( $date['date1'] ) ? $date1 = $date['date1']  : $date1 = "";
-        isset( $date['date2'] ) ? $date2 = $date['date2']  : $date2 = "";
+    isset($date['year1']) ? $year1 = $date['year1']  : $year1 = "";
+    isset($date['year2']) ? $year2 = $date['year2']  : $year2 = "";
+    isset($date['date1']) ? $date1 = $date['date1']  : $date1 = "";
+    isset($date['date2']) ? $date2 = $date['date2']  : $date2 = "";
     if ($chk == 'month') {
       $Sql = "SELECT
       shelfcount.DocDate,
@@ -3330,10 +3367,10 @@ function r17($conn, $HptCode, $FacCode, $date1, $date2, $Format, $DepCode, $chk)
     }
   } else if ($Format == 2) {
     $date = subMonth($date1, $date2);
-        isset( $date['year1'] ) ? $year1 = $date['year1']  : $year1 = "";
-        isset( $date['year2'] ) ? $year2 = $date['year2']  : $year2 = "";
-        isset( $date['date1'] ) ? $date1 = $date['date1']  : $date1 = "";
-        isset( $date['date2'] ) ? $date2 = $date['date2']  : $date2 = "";
+    isset($date['year1']) ? $year1 = $date['year1']  : $year1 = "";
+    isset($date['year2']) ? $year2 = $date['year2']  : $year2 = "";
+    isset($date['date1']) ? $date1 = $date['date1']  : $date1 = "";
+    isset($date['date2']) ? $date2 = $date['date2']  : $date2 = "";
     if ($chk == 'month') {
       $Sql = "SELECT
               site.HptName,
@@ -3430,10 +3467,10 @@ function r18($conn, $HptCode, $FacCode, $date1, $date2, $Format, $DepCode, $chk)
     }
   } else if ($Format == 2) {
     $date = subMonth($date1, $date2);
-        isset( $date['year1'] ) ? $year1 = $date['year1']  : $year1 = "";
-        isset( $date['year2'] ) ? $year2 = $date['year2']  : $year2 = "";
-        isset( $date['date1'] ) ? $date1 = $date['date1']  : $date1 = "";
-        isset( $date['date2'] ) ? $date2 = $date['date2']  : $date2 = "";
+    isset($date['year1']) ? $year1 = $date['year1']  : $year1 = "";
+    isset($date['year2']) ? $year2 = $date['year2']  : $year2 = "";
+    isset($date['date1']) ? $date1 = $date['date1']  : $date1 = "";
+    isset($date['date2']) ? $date2 = $date['date2']  : $date2 = "";
     if ($chk == 'month') {
       $Sql = "SELECT
 	      COUNT(shelfcount.DocNo)
@@ -3533,10 +3570,10 @@ function r19($conn, $HptCode, $FacCode, $date1, $date2, $Format, $DepCode, $User
     }
   } else if ($Format == 2) {
     $date = subMonth($date1, $date2);
-        isset( $date['year1'] ) ? $year1 = $date['year1']  : $year1 = "";
-        isset( $date['year2'] ) ? $year2 = $date['year2']  : $year2 = "";
-        isset( $date['date1'] ) ? $date1 = $date['date1']  : $date1 = "";
-        isset( $date['date2'] ) ? $date2 = $date['date2']  : $date2 = "";
+    isset($date['year1']) ? $year1 = $date['year1']  : $year1 = "";
+    isset($date['year2']) ? $year2 = $date['year2']  : $year2 = "";
+    isset($date['date1']) ? $date1 = $date['date1']  : $date1 = "";
+    isset($date['date2']) ? $date2 = $date['date2']  : $date2 = "";
     if ($chk == 'month') {
       $Sql = "SELECT
       department.DepName,
@@ -3648,10 +3685,10 @@ function r20($conn, $HptCode, $FacCode, $date1, $date2, $Format, $DepCode, $User
     }
   } else if ($Format == 2) {
     $date = subMonth($date1, $date2);
-        isset( $date['year1'] ) ? $year1 = $date['year1']  : $year1 = "";
-        isset( $date['year2'] ) ? $year2 = $date['year2']  : $year2 = "";
-        isset( $date['date1'] ) ? $date1 = $date['date1']  : $date1 = "";
-        isset( $date['date2'] ) ? $date2 = $date['date2']  : $date2 = "";
+    isset($date['year1']) ? $year1 = $date['year1']  : $year1 = "";
+    isset($date['year2']) ? $year2 = $date['year2']  : $year2 = "";
+    isset($date['date1']) ? $date1 = $date['date1']  : $date1 = "";
+    isset($date['date2']) ? $date2 = $date['date2']  : $date2 = "";
     if ($chk == 'month') {
       $Sql = "SELECT
       department.DepName,
@@ -3761,10 +3798,10 @@ function r21($conn, $HptCode, $FacCode, $date1, $date2, $Format, $DepCode, $User
     }
   } else if ($Format == 2) {
     $date = subMonth($date1, $date2);
-        isset( $date['year1'] ) ? $year1 = $date['year1']  : $year1 = "";
-        isset( $date['year2'] ) ? $year2 = $date['year2']  : $year2 = "";
-        isset( $date['date1'] ) ? $date1 = $date['date1']  : $date1 = "";
-        isset( $date['date2'] ) ? $date2 = $date['date2']  : $date2 = "";
+    isset($date['year1']) ? $year1 = $date['year1']  : $year1 = "";
+    isset($date['year2']) ? $year2 = $date['year2']  : $year2 = "";
+    isset($date['date1']) ? $date1 = $date['date1']  : $date1 = "";
+    isset($date['date2']) ? $date2 = $date['date2']  : $date2 = "";
     if ($chk == 'month') {
       $Sql = "SELECT
       tdas_document.DocNo,
@@ -3869,10 +3906,10 @@ function r22($conn, $HptCode, $FacCode, $date1, $date2, $Format, $DepCode, $chk)
     }
   } else if ($Format == 2) {
     $date = subMonth($date1, $date2);
-        isset( $date['year1'] ) ? $year1 = $date['year1']  : $year1 = "";
-        isset( $date['year2'] ) ? $year2 = $date['year2']  : $year2 = "";
-        isset( $date['date1'] ) ? $date1 = $date['date1']  : $date1 = "";
-        isset( $date['date2'] ) ? $date2 = $date['date2']  : $date2 = "";
+    isset($date['year1']) ? $year1 = $date['year1']  : $year1 = "";
+    isset($date['year2']) ? $year2 = $date['year2']  : $year2 = "";
+    isset($date['date1']) ? $date1 = $date['date1']  : $date1 = "";
+    isset($date['date2']) ? $date2 = $date['date2']  : $date2 = "";
 
     if ($chk == 'month') {
       $Sql = "SELECT factory.FacName, newlinentable.DocDate, site.HptName
@@ -3980,10 +4017,10 @@ function r23($conn, $HptCode, $FacCode, $date1, $date2, $Format, $DepCode, $chk)
     }
   } else if ($Format == 2) {
     $date = subMonth($date1, $date2);
-        isset( $date['year1'] ) ? $year1 = $date['year1']  : $year1 = "";
-        isset( $date['year2'] ) ? $year2 = $date['year2']  : $year2 = "";
-        isset( $date['date1'] ) ? $date1 = $date['date1']  : $date1 = "";
-        isset( $date['date2'] ) ? $date2 = $date['date2']  : $date2 = "";
+    isset($date['year1']) ? $year1 = $date['year1']  : $year1 = "";
+    isset($date['year2']) ? $year2 = $date['year2']  : $year2 = "";
+    isset($date['date1']) ? $date1 = $date['date1']  : $date1 = "";
+    isset($date['date2']) ? $date2 = $date['date2']  : $date2 = "";
 
     if ($chk == 'month') {
       $Sql = "SELECT  damagenh.DocDate, site.HptName
@@ -4034,8 +4071,8 @@ function r23($conn, $HptCode, $FacCode, $date1, $date2, $Format, $DepCode, $chk)
   while ($Result = mysqli_fetch_assoc($meQuery)) {
     $return[$count]['HptName'] = $Result['HptName'];
     $return[$count]['DocDate'] = $Result['DocDate'];
-    $return[$count]['FacName'] = $Result['FacName'];
-    $return[$count]['FacCode'] = $Result['FacCode'];
+    // $return[$count]['FacName'] = $Result['FacName'];
+    // $return[$count]['FacCode'] = $Result['FacCode'];
     $count++;
     $boolean = true;
   }
@@ -4094,10 +4131,10 @@ function r24($conn, $HptCode, $FacCode, $date1, $date2, $Format, $DepCode, $chk)
     }
   } else if ($Format == 2) {
     $date = subMonth($date1, $date2);
-        isset( $date['year1'] ) ? $year1 = $date['year1']  : $year1 = "";
-        isset( $date['year2'] ) ? $year2 = $date['year2']  : $year2 = "";
-        isset( $date['date1'] ) ? $date1 = $date['date1']  : $date1 = "";
-        isset( $date['date2'] ) ? $date2 = $date['date2']  : $date2 = "";
+    isset($date['year1']) ? $year1 = $date['year1']  : $year1 = "";
+    isset($date['year2']) ? $year2 = $date['year2']  : $year2 = "";
+    isset($date['date1']) ? $date1 = $date['date1']  : $date1 = "";
+    isset($date['date2']) ? $date2 = $date['date2']  : $date2 = "";
 
     if ($chk == 'month') {
       $Sql = "SELECT  damage.DocDate, site.HptName
@@ -4184,10 +4221,10 @@ function r25($conn, $HptCode, $FacCode, $date1, $date2, $Format, $DepCode, $chk)
   $boolean = false;
   if ($Format == 2) {
     $date = subMonth($date1, $date2);
-        isset( $date['year1'] ) ? $year1 = $date['year1']  : $year1 = "";
-        isset( $date['year2'] ) ? $year2 = $date['year2']  : $year2 = "";
-        isset( $date['date1'] ) ? $date1 = $date['date1']  : $date1 = "";
-        isset( $date['date2'] ) ? $date2 = $date['date2']  : $date2 = "";
+    isset($date['year1']) ? $year1 = $date['year1']  : $year1 = "";
+    isset($date['year2']) ? $year2 = $date['year2']  : $year2 = "";
+    isset($date['date1']) ? $date1 = $date['date1']  : $date1 = "";
+    isset($date['date2']) ? $date2 = $date['date2']  : $date2 = "";
 
     if ($chk == 'month') {
       $Sql = "SELECT site.HptName
@@ -4208,7 +4245,7 @@ function r25($conn, $HptCode, $FacCode, $date1, $date2, $Format, $DepCode, $chk)
   $meQuery = mysqli_query($conn, $Sql);
   while ($Result = mysqli_fetch_assoc($meQuery)) {
     $return[$count]['HptName'] = $Result['HptName'];
-    $return[$count]['DocDate'] = $Result['DocDate'];
+    // $return[$count]['DocDate'] = $Result['DocDate'];
     $count++;
     $boolean = true;
   }
@@ -4238,10 +4275,10 @@ function r26($conn, $HptCode, $FacCode, $date1, $date2, $Format, $DepCode, $chk)
   $boolean = false;
   if ($Format == 2) {
     $date = subMonth($date1, $date2);
-        isset( $date['year1'] ) ? $year1 = $date['year1']  : $year1 = "";
-        isset( $date['year2'] ) ? $year2 = $date['year2']  : $year2 = "";
-        isset( $date['date1'] ) ? $date1 = $date['date1']  : $date1 = "";
-        isset( $date['date2'] ) ? $date2 = $date['date2']  : $date2 = "";
+    isset($date['year1']) ? $year1 = $date['year1']  : $year1 = "";
+    isset($date['year2']) ? $year2 = $date['year2']  : $year2 = "";
+    isset($date['date1']) ? $date1 = $date['date1']  : $date1 = "";
+    isset($date['date2']) ? $date2 = $date['date2']  : $date2 = "";
 
     if ($chk == 'month') {
       $Sql = "SELECT site.HptName
@@ -4262,7 +4299,7 @@ function r26($conn, $HptCode, $FacCode, $date1, $date2, $Format, $DepCode, $chk)
   $meQuery = mysqli_query($conn, $Sql);
   while ($Result = mysqli_fetch_assoc($meQuery)) {
     $return[$count]['HptName'] = $Result['HptName'];
-    $return[$count]['DocDate'] = $Result['DocDate'];
+    // $return[$count]['DocDate'] = $Result['DocDate'];
     $count++;
     $boolean = true;
   }
@@ -4292,10 +4329,10 @@ function r27($conn, $HptCode, $FacCode, $date1, $date2, $Format, $DepCode, $chk)
   $boolean = false;
   if ($Format == 2) {
     $date = subMonth($date1, $date2);
-        isset( $date['year1'] ) ? $year1 = $date['year1']  : $year1 = "";
-        isset( $date['year2'] ) ? $year2 = $date['year2']  : $year2 = "";
-        isset( $date['date1'] ) ? $date1 = $date['date1']  : $date1 = "";
-        isset( $date['date2'] ) ? $date2 = $date['date2']  : $date2 = "";
+    isset($date['year1']) ? $year1 = $date['year1']  : $year1 = "";
+    isset($date['year2']) ? $year2 = $date['year2']  : $year2 = "";
+    isset($date['date1']) ? $date1 = $date['date1']  : $date1 = "";
+    isset($date['date2']) ? $date2 = $date['date2']  : $date2 = "";
 
     if ($chk == 'month') {
       $Sql = "SELECT site.HptName
@@ -4315,7 +4352,7 @@ function r27($conn, $HptCode, $FacCode, $date1, $date2, $Format, $DepCode, $chk)
   $meQuery = mysqli_query($conn, $Sql);
   while ($Result = mysqli_fetch_assoc($meQuery)) {
     $return[$count]['HptName'] = $Result['HptName'];
-    $return[$count]['DocDate'] = $Result['DocDate'];
+    // $return[$count]['DocDate'] = $Result['DocDate'];
     $count++;
     $boolean = true;
   }
@@ -4380,10 +4417,10 @@ function r28($conn, $HptCode, $FacCode, $date1, $date2, $Format, $DepCode, $Grou
     }
   } else if ($Format == 2) {
     $date = subMonth($date1, $date2);
-        isset( $date['year1'] ) ? $year1 = $date['year1']  : $year1 = "";
-        isset( $date['year2'] ) ? $year2 = $date['year2']  : $year2 = "";
-        isset( $date['date1'] ) ? $date1 = $date['date1']  : $date1 = "";
-        isset( $date['date2'] ) ? $date2 = $date['date2']  : $date2 = "";
+    isset($date['year1']) ? $year1 = $date['year1']  : $year1 = "";
+    isset($date['year2']) ? $year2 = $date['year2']  : $year2 = "";
+    isset($date['date1']) ? $date1 = $date['date1']  : $date1 = "";
+    isset($date['date2']) ? $date2 = $date['date2']  : $date2 = "";
 
     if ($chk == 'month') {
       $Sql = "SELECT  shelfcount.complete_date, site.HptName , department.DepName
@@ -4535,10 +4572,10 @@ function r29($conn, $HptCode, $FacCode, $date1, $date2, $Format, $DepCode, $Grou
     }
   } else if ($Format == 2) {
     $date = subMonth($date1, $date2);
-        isset( $date['year1'] ) ? $year1 = $date['year1']  : $year1 = "";
-        isset( $date['year2'] ) ? $year2 = $date['year2']  : $year2 = "";
-        isset( $date['date1'] ) ? $date1 = $date['date1']  : $date1 = "";
-        isset( $date['date2'] ) ? $date2 = $date['date2']  : $date2 = "";
+    isset($date['year1']) ? $year1 = $date['year1']  : $year1 = "";
+    isset($date['year2']) ? $year2 = $date['year2']  : $year2 = "";
+    isset($date['date1']) ? $date1 = $date['date1']  : $date1 = "";
+    isset($date['date2']) ? $date2 = $date['date2']  : $date2 = "";
 
     if ($chk == 'month') {
       $Sql = "SELECT  shelfcount.DocDate, site.HptName, department.DepName ,department.DepCode
@@ -4699,10 +4736,10 @@ function r30($conn, $HptCode, $FacCode, $date1, $date2, $Format, $DepCode, $Grou
     }
   } else if ($Format == 2) {
     $date = subMonth($date1, $date2);
-        isset( $date['year1'] ) ? $year1 = $date['year1']  : $year1 = "";
-        isset( $date['year2'] ) ? $year2 = $date['year2']  : $year2 = "";
-        isset( $date['date1'] ) ? $date1 = $date['date1']  : $date1 = "";
-        isset( $date['date2'] ) ? $date2 = $date['date2']  : $date2 = "";
+    isset($date['year1']) ? $year1 = $date['year1']  : $year1 = "";
+    isset($date['year2']) ? $year2 = $date['year2']  : $year2 = "";
+    isset($date['date1']) ? $date1 = $date['date1']  : $date1 = "";
+    isset($date['date2']) ? $date2 = $date['date2']  : $date2 = "";
 
     if ($chk == 'month') {
       $Sql = "SELECT  shelfcount.DocDate, site.HptName, department.DepName ,department.DepCode
@@ -4854,10 +4891,10 @@ function r31($conn, $HptCode, $FacCode, $date1, $date2, $Format, $DepCode, $cate
   #เดือน
   else if ($Format == 2) {
     $date = subMonth($date1, $date2);
-        isset( $date['year1'] ) ? $year1 = $date['year1']  : $year1 = "";
-        isset( $date['year2'] ) ? $year2 = $date['year2']  : $year2 = "";
-        isset( $date['date1'] ) ? $date1 = $date['date1']  : $date1 = "";
-        isset( $date['date2'] ) ? $date2 = $date['date2']  : $date2 = "";
+    isset($date['year1']) ? $year1 = $date['year1']  : $year1 = "";
+    isset($date['year2']) ? $year2 = $date['year2']  : $year2 = "";
+    isset($date['date1']) ? $date1 = $date['date1']  : $date1 = "";
+    isset($date['date2']) ? $date2 = $date['date2']  : $date2 = "";
     if ($chk == 'month') {
       $Sql = "SELECT
                 report_billing_detail.DocDate,
@@ -5008,10 +5045,10 @@ function r32($conn, $HptCode, $FacCode, $date1, $date2, $Format, $DepCode, $cate
     }
   } else if ($Format == 2) {
     $date = subMonth($date1, $date2);
-        isset( $date['year1'] ) ? $year1 = $date['year1']  : $year1 = "";
-        isset( $date['year2'] ) ? $year2 = $date['year2']  : $year2 = "";
-        isset( $date['date1'] ) ? $date1 = $date['date1']  : $date1 = "";
-        isset( $date['date2'] ) ? $date2 = $date['date2']  : $date2 = "";
+    isset($date['year1']) ? $year1 = $date['year1']  : $year1 = "";
+    isset($date['year2']) ? $year2 = $date['year2']  : $year2 = "";
+    isset($date['date1']) ? $date1 = $date['date1']  : $date1 = "";
+    isset($date['date2']) ? $date2 = $date['date2']  : $date2 = "";
     if ($chk == 'month') {
       $Sql = "SELECT  return_doc.DocDate, site.HptName , department.DepName
           FROM
@@ -5143,10 +5180,10 @@ function r33($conn, $HptCode, $FacCode, $date1, $date2, $Format, $DepCode, $Grou
     }
   } else if ($Format == 2) {
     $date = subMonth($date1, $date2);
-        isset( $date['year1'] ) ? $year1 = $date['year1']  : $year1 = "";
-        isset( $date['year2'] ) ? $year2 = $date['year2']  : $year2 = "";
-        isset( $date['date1'] ) ? $date1 = $date['date1']  : $date1 = "";
-        isset( $date['date2'] ) ? $date2 = $date['date2']  : $date2 = "";
+    isset($date['year1']) ? $year1 = $date['year1']  : $year1 = "";
+    isset($date['year2']) ? $year2 = $date['year2']  : $year2 = "";
+    isset($date['date1']) ? $date1 = $date['date1']  : $date1 = "";
+    isset($date['date2']) ? $date2 = $date['date2']  : $date2 = "";
 
     if ($chk == 'month') {
       $Sql = "SELECT  shelfcount.complete_date, site.HptName , department.DepName
@@ -5245,104 +5282,85 @@ function r34($conn, $HptCode, $FacCode, $date1, $date2, $Format, $DepCode, $Grou
   }
   if ($Format == 1) {
     if ($chk == 'one') {
-      $Sql = "SELECT  shelfcount.DocDate, site.HptName , department.DepName ,department.DepCode
+      $Sql = "SELECT  shelfcount.DocDate
               FROM
               shelfcount  
-              INNER JOIN department ON department.DepCode = shelfcount.DepCode  
-              INNER JOIN site ON site.HptCode = department.HptCode  
               INNER JOIN shelfcount_detail ON shelfcount_detail.DocNo = shelfcount.DocNo    
               WHERE DATE(shelfcount.complete_date) = DATE('$date1')
-              AND site.HptCode = '$HptCode'
+              AND shelfcount.SiteCode = '$HptCode'
               AND shelfcount.isStatus <> 9 
               $DepCode1
               $item1
-              AND shelfcount_detail.TotalQty <> 0
-              GROUP BY department.DepCode
-              ORDER BY department.DepName ASC $limit";
+              AND shelfcount_detail.TotalQty <> 0 $limit";
     } else {
-      $Sql = "SELECT  shelfcount.DocDate, site.HptName, department.DepName ,department.DepCode
+      $Sql = "SELECT  shelfcount.DocDate
               FROM
               shelfcount  
-              INNER JOIN department ON department.DepCode = shelfcount.DepCode  
-              INNER JOIN site ON site.HptCode = department.HptCode  
               INNER JOIN shelfcount_detail ON shelfcount_detail.DocNo = shelfcount.DocNo    
               WHERE DATE(shelfcount.complete_date) BETWEEN '$date1' AND '$date2'
-              AND site.HptCode = '$HptCode'
+              AND shelfcount.SiteCode = '$HptCode'
               AND shelfcount.isStatus <> 9 
               $DepCode1
               $item1
-              AND shelfcount_detail.TotalQty <> 0
-              GROUP BY department.DepCode
-              ORDER BY department.DepName ASC $limit";
+              AND shelfcount_detail.TotalQty <> 0  $limit";
     }
   } else if ($Format == 2) {
     $date = subMonth($date1, $date2);
-        isset( $date['year1'] ) ? $year1 = $date['year1']  : $year1 = "";
-        isset( $date['year2'] ) ? $year2 = $date['year2']  : $year2 = "";
-        isset( $date['date1'] ) ? $date1 = $date['date1']  : $date1 = "";
-        isset( $date['date2'] ) ? $date2 = $date['date2']  : $date2 = "";
+    isset($date['year1']) ? $year1 = $date['year1']  : $year1 = "";
+    isset($date['year2']) ? $year2 = $date['year2']  : $year2 = "";
+    isset($date['date1']) ? $date1 = $date['date1']  : $date1 = "";
+    isset($date['date2']) ? $date2 = $date['date2']  : $date2 = "";
 
     if ($chk == 'month') {
-      $Sql = "SELECT  shelfcount.DocDate, site.HptName, department.DepName ,department.DepCode
+      $Sql = "SELECT  shelfcount.DocDate
               FROM
               shelfcount  
-              INNER JOIN department ON department.DepCode = shelfcount.DepCode  
-              INNER JOIN site ON site.HptCode = department.HptCode  
               INNER JOIN shelfcount_detail ON shelfcount_detail.DocNo = shelfcount.DocNo    
               WHERE MONTH(shelfcount.complete_date) = '$date1'
               AND YEAR(shelfcount.complete_date) = '$year1'
-              AND site.HptCode = '$HptCode'
+              AND shelfcount.SiteCode = '$HptCode'
               $DepCode1
               $item1
               AND shelfcount_detail.TotalQty <> 0
-              AND shelfcount.isStatus <> 9 
-              GROUP BY department.DepCode
-              ORDER BY department.DepName ASC $limit";
+              AND shelfcount.isStatus <> 9 $limit";
     } else {
       $lastday = cal_days_in_month(CAL_GREGORIAN, $date2, $year2);
       $betweendate1 = $year1 . '-' . $date1 . '-1';
       $betweendate2 = $year2 . '-' . $date2 . '-' . $lastday;
-      $Sql = " SELECT  shelfcount.DocDate, site.HptName, department.DepName ,department.DepCode
-              FROM
+      $Sql = " SELECT  shelfcount.DocDate
               damage  
-              INNER JOIN department ON department.DepCode = shelfcount.DepCode  
-              INNER JOIN site ON site.HptCode = department.HptCode  
               INNER JOIN shelfcount_detail ON shelfcount_detail.DocNo = shelfcount.DocNo    
               WHERE DATE(shelfcount.complete_date) BETWEEN '$betweendate1' AND '$betweendate2'
-           AND site.HptCode = '$HptCode'
+           AND shelfcount.SiteCode = '$HptCode'
            $DepCode1
            $item1
            AND shelfcount_detail.TotalQty <> 0
-           AND shelfcount.isStatus <> 9 
-           GROUP BY YEAR (shelfcount.Docdate) ,department.DepCode
-           ORDER BY department.DepName ASC $limit";
+           AND shelfcount.isStatus <> 9  $limit";
     }
   } else if ($Format == 3) {
-    $Sql = "  SELECT  shelfcount.DocDate, site.HptName, department.DepName ,department.DepCode
+    $Sql = "  SELECT  shelfcount.DocDate
                FROM
                shelfcount  
-              INNER JOIN department ON department.DepCode = shelfcount.DepCode  
-              INNER JOIN site ON site.HptCode = department.HptCode  
               INNER JOIN shelfcount_detail ON shelfcount_detail.DocNo = shelfcount.DocNo    
               WHERE YEAR(shelfcount.complete_date) = '$date1'
-             AND site.HptCode = '$HptCode'
+             AND shelfcount.SiteCode = '$HptCode'
              $DepCode1
              $item1
              AND shelfcount_detail.TotalQty <> 0
-             AND shelfcount.isStatus <> 9 
-             GROUP BY department.DepCode
-             ORDER BY shelfcount.DocDate ASC $limit";
+             AND shelfcount.isStatus <> 9  $limit";
   }
+
+
   $return['sql'] = $Sql;
   $data_send = ['HptCode' => $HptCode, 'FacCode' => $FacCode, 'date1' => $date1, 'date2' => $date2, 'betweendate1' => $betweendate1, 'betweendate2' => $betweendate2, 'Format' => $Format, 'DepCode' => $DepCode, 'chk' => $chk, 'year1' => $year1, 'year2' => $year2, 'item' => $Item, 'type_usage_detail' => $type_usage_detail];
   //$_SESSION['data_send'] = $data_send;
   $return['urlxls'] = '../report_linen/excel/Report_Usage_Detail_new_xls.php';
   $meQuery = mysqli_query($conn, $Sql);
   while ($Result = mysqli_fetch_assoc($meQuery)) {
-    $return['department'][$count]['HptName'] = $Result['HptName'];
+    // $return['department'][$count]['HptName'] = $Result['HptName'];
     $return['department'][$count]['DocDate'] = $Result['DocDate'];
-    $return['department'][$count]['DepName'] = $Result['DepName'];
-    $return['department'][$count]['DepCode'] = $Result['DepCode'];
+    // $return['department'][$count]['DepName'] = $Result['DepName'];
+    // $return['department'][$count]['DepCode'] = $Result['DepCode'];
     $count++;
     $boolean = true;
   }
@@ -5439,10 +5457,10 @@ function r35($conn, $HptCode, $FacCode, $date1, $date2, $Format, $DepCode, $cate
   #เดือน
   else if ($Format == 2) {
     $date = subMonth($date1, $date2);
-        isset( $date['year1'] ) ? $year1 = $date['year1']  : $year1 = "";
-        isset( $date['year2'] ) ? $year2 = $date['year2']  : $year2 = "";
-        isset( $date['date1'] ) ? $date1 = $date['date1']  : $date1 = "";
-        isset( $date['date2'] ) ? $date2 = $date['date2']  : $date2 = "";
+    isset($date['year1']) ? $year1 = $date['year1']  : $year1 = "";
+    isset($date['year2']) ? $year2 = $date['year2']  : $year2 = "";
+    isset($date['date1']) ? $date1 = $date['date1']  : $date1 = "";
+    isset($date['date2']) ? $date2 = $date['date2']  : $date2 = "";
     if ($chk == 'month') {
       $Sql = "SELECT
                     report_sc.DocDate,
@@ -5597,10 +5615,10 @@ function r36($conn, $HptCode, $FacCode, $date1, $date2, $Format, $DepCode, $time
     }
   } else if ($Format == 2) {
     $date = subMonth($date1, $date2);
-        isset( $date['year1'] ) ? $year1 = $date['year1']  : $year1 = "";
-        isset( $date['year2'] ) ? $year2 = $date['year2']  : $year2 = "";
-        isset( $date['date1'] ) ? $date1 = $date['date1']  : $date1 = "";
-        isset( $date['date2'] ) ? $date2 = $date['date2']  : $date2 = "";
+    isset($date['year1']) ? $year1 = $date['year1']  : $year1 = "";
+    isset($date['year2']) ? $year2 = $date['year2']  : $year2 = "";
+    isset($date['date1']) ? $date1 = $date['date1']  : $date1 = "";
+    isset($date['date2']) ? $date2 = $date['date2']  : $date2 = "";
     if ($chk == 'month') {
       $Sql = "SELECT  
       MONTH(dirty.DocDate) AS DocDate1,
@@ -5726,10 +5744,10 @@ function r37($conn, $HptCode, $FacCode, $date1, $date2, $Format, $DepCode, $chk)
     }
   } else if ($Format == 2) {
     $date = subMonth($date1, $date2);
-        isset( $date['year1'] ) ? $year1 = $date['year1']  : $year1 = "";
-        isset( $date['year2'] ) ? $year2 = $date['year2']  : $year2 = "";
-        isset( $date['date1'] ) ? $date1 = $date['date1']  : $date1 = "";
-        isset( $date['date2'] ) ? $date2 = $date['date2']  : $date2 = "";
+    isset($date['year1']) ? $year1 = $date['year1']  : $year1 = "";
+    isset($date['year2']) ? $year2 = $date['year2']  : $year2 = "";
+    isset($date['date1']) ? $date1 = $date['date1']  : $date1 = "";
+    isset($date['date2']) ? $date2 = $date['date2']  : $date2 = "";
 
     if ($chk == 'month') {
       $Sql = "SELECT factory.FacName, clean.DocDate, site.HptName
@@ -5860,10 +5878,10 @@ function r38($conn, $HptCode, $FacCode, $date1, $date2, $Format, $DepCode, $Grou
     }
   } else if ($Format == 2) {
     $date = subMonth($date1, $date2);
-        isset( $date['year1'] ) ? $year1 = $date['year1']  : $year1 = "";
-        isset( $date['year2'] ) ? $year2 = $date['year2']  : $year2 = "";
-        isset( $date['date1'] ) ? $date1 = $date['date1']  : $date1 = "";
-        isset( $date['date2'] ) ? $date2 = $date['date2']  : $date2 = "";
+    isset($date['year1']) ? $year1 = $date['year1']  : $year1 = "";
+    isset($date['year2']) ? $year2 = $date['year2']  : $year2 = "";
+    isset($date['date1']) ? $date1 = $date['date1']  : $date1 = "";
+    isset($date['date2']) ? $date2 = $date['date2']  : $date2 = "";
 
     if ($chk == 'month') {
       $Sql = "SELECT  shelfcount.DocDate, site.HptName, department.DepName ,department.DepCode
@@ -5916,6 +5934,8 @@ function r38($conn, $HptCode, $FacCode, $date1, $date2, $Format, $DepCode, $Grou
              GROUP BY department.DepCode
              ORDER BY shelfcount.DocDate ASC $limit";
   }
+
+
   $return['sql'] = $Sql;
   $data_send = ['HptCode' => $HptCode, 'FacCode' => $FacCode, 'date1' => $date1, 'date2' => $date2, 'betweendate1' => $betweendate1, 'betweendate2' => $betweendate2, 'Format' => $Format, 'DepCode' => $DepCode, 'chk' => $chk, 'year1' => $year1, 'year2' => $year2, 'item' => $Item, 'type_usage_detail' => $type_usage_detail];
   //$_SESSION['data_send'] = $data_send;
@@ -5996,10 +6016,10 @@ function r39($conn, $HptCode, $FacCode, $date1, $date2, $Format, $DepCode, $Grou
     }
   } else if ($Format == 2) {
     $date = subMonth($date1, $date2);
-        isset( $date['year1'] ) ? $year1 = $date['year1']  : $year1 = "";
-        isset( $date['year2'] ) ? $year2 = $date['year2']  : $year2 = "";
-        isset( $date['date1'] ) ? $date1 = $date['date1']  : $date1 = "";
-        isset( $date['date2'] ) ? $date2 = $date['date2']  : $date2 = "";
+    isset($date['year1']) ? $year1 = $date['year1']  : $year1 = "";
+    isset($date['year2']) ? $year2 = $date['year2']  : $year2 = "";
+    isset($date['date1']) ? $date1 = $date['date1']  : $date1 = "";
+    isset($date['date2']) ? $date2 = $date['date2']  : $date2 = "";
 
     if ($chk == 'month') {
       $Sql = "SELECT  shelfcount.complete_date, site.HptName , department.DepName

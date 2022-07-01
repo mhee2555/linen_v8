@@ -23,7 +23,7 @@ $betweendate2 = $data[5];
 $format = $data[6];
 $DepCode = $data[7];
 $chk = $data[8];
-$year = $data['year'];
+// $year = $data['year'];
 $where = '';
 $language = $_SESSION['lang'];
 //--------------------------------------------------------------------------
@@ -152,7 +152,7 @@ class MYPDF extends TCPDF
     $json2 = json_encode($xml2);
     $array2 = json_decode($json2, TRUE);
     $language = $_SESSION['lang'];
-    $header = array($array['no'][$language],$array['itemname'][$language],$array['qty'][$language],$array['unit'][$language].' (ชิ้น)',$array['weight'][$language].' (kg)');
+    // $header = array($array['no'][$language],$array['itemname'][$language],$array['qty'][$language],$array['unit'][$language].' (ชิ้น)',$array['weight'][$language].' (kg)');
     if ($language == 'th') {
       $printdate = date('d') . " " . $datetime->getTHmonth(date('F')) . " พ.ศ. " . $datetime->getTHyear(date('Y'));
     } else {
@@ -229,6 +229,8 @@ else
   $LName = 'EngLName';
 }
 $count = 1;
+$totalsum = 0;
+$totalqty = 0;
 // ------------------------------------------------------------------------------
 $head = "SELECT
           factory.$FacName,

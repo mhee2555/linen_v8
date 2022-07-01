@@ -1,16 +1,25 @@
 <?php
-include("PHPExcel-1.8/Classes/PHPExcel.php");
-require('../report/connect.php');
+// include composer autoload
+include_once('connect.php');
+require 'vendor/autoload.php';
 require('../report/Class.php');
-header('Content-Type: text/html; charset=utf-8');
-date_default_timezone_set("Asia/Bangkok");
-session_start();
-$language = $_SESSION['lang'];
-if ($language == "en") {
-  $language = "en";
-} else {
-  $language = "th";
-}
+
+
+// $language = $_SESSION['lang'];
+// if ($language == "en") {
+//     $language = "en";
+// } else {
+    $language = "th";
+// }
+$xml = simplexml_load_file('../xml/general_lang.xml');
+$xml2 = simplexml_load_file('../xml/report_lang.xml');
+$json = json_encode($xml);
+$array = json_decode($json, TRUE);
+$json2 = json_encode($xml2);
+$array2 = json_decode($json2, TRUE);
+$data = explode(',', $_GET['data']);
+
+
 $xml = simplexml_load_file('../xml/general_lang.xml');
 $xml2 = simplexml_load_file('../xml/report_lang.xml');
 $json = json_encode($xml);
@@ -55,172 +64,99 @@ else
   $HptName = 'HptName';
   $FacName = 'FacName';
 }
-if ($chk == 'one')
-{
-  if ($format == 1)
-  {
-    $where =   "WHERE DATE (clean.Docdate) = DATE('$date1')";
-    $where_new = "WHERE  DATE (newlinentable.DocDate) LIKE '%$date1%'";
+// header
+
+if ($chk == 'one') {
+    if ($format == 1) {
+        list($year, $mouth, $day) = explode("-", $date1);
+        $datetime = new DatetimeTH();
+        if ($language == 'th') {
+            $year = $year + 543;
+            $date_header = $array['date'][$language] . $day . " " . $datetime->getTHmonthFromnum($mouth) . " พ.ศ. " . $year;
+        } else {
+            $date_header = $array['date'][$language] . $day . " " . $datetime->getmonthFromnum($mouth) . " " . $year;
+        }
+    } elseif ($format = 3) {
+        if ($language == "th") {
+            $date1 = $date1 + 543;
+            $date_header = $array['year'][$language] . " " . $date1;
+        } else {
+            $date_header = $array['year'][$language] . $date1;
+        }
+    }
+} elseif ($chk == 'between') {
     list($year, $mouth, $day) = explode("-", $date1);
+    list($year2, $mouth2, $day2) = explode("-", $date2);
     $datetime = new DatetimeTH();
-    if ($language == 'th')
-    {
-      $year = $year + 543;
-      $date_header = $array['date'][$language] . $day . " " . $datetime->getTHmonthFromnum($mouth) . " พ.ศ. " . $year;
+    if ($language == 'th') {
+        $year2 = $year2 + 543;
+        $year = $year + 543;
+        $date_header = $array['date'][$language] . $day . " " . $datetime->getTHmonthFromnum($mouth) . " พ.ศ. " . $year . $array['to'][$language] .
+            $array['date'][$language] . $day2 . " " . $datetime->getTHmonthFromnum($mouth2) . " พ.ศ. " . $year2;
+    } else {
+        $date_header = $array['date'][$language] . $day . " " . $datetime->getmonthFromnum($mouth) . " " . $year . " " . $array['to'][$language] . " " .
+            $day2 . " " . $datetime->getmonthFromnum($mouth2) . " " . $year2;
     }
-    else
-    {
-      $date_header = $array['date'][$language] . $day . " " . $datetime->getmonthFromnum($mouth) . " " . $year;
+} elseif ($chk == 'month') {
+    $datetime = new DatetimeTH();
+    if ($language == 'th') {
+        $date_header = $array['month'][$language]  . " " . $datetime->getTHmonthFromnum($date1);
+    } else {
+        $date_header = $array['month'][$language] . " " . $datetime->getmonthFromnum($date1);
     }
-  }
-  elseif ($format = 3)
-  {
-    $where = "WHERE  year (clean.DocDate) LIKE '%$date1%'";
-    $where_new = "WHERE  year (newlinentable.DocDate) LIKE '%$date1%'";
-
-    if ($language == "th")
-    {
-      $date1 = $date1 + 543;
-      $date_header = $array['year'][$language] . " " . $date1;
+} elseif ($chk == 'monthbetween') {
+    list($year, $mouth, $day) = explode("-", $betweendate1);
+    list($year2, $mouth2, $day2) = explode("-", $betweendate2);
+    $datetime = new DatetimeTH();
+    if ($language == 'th') {
+        $year = $year + 543;
+        $year2 = $year2 + 543;
+        $date_header = $array['month'][$language] . $datetime->getTHmonthFromnum($date1) . " $year " . $array['to'][$language] . " " . $datetime->getTHmonthFromnum($date2) . " $year2 ";
+    } else {
+        $date_header = $array['month'][$language] . $datetime->getmonthFromnum($date1) . " $year " . $array['to'][$language] . " " . $datetime->getmonthFromnum($date2) . " $year2 ";
     }
-    else
-    {
-      $date_header = $array['year'][$language] . $date1;
-    }
-  }
-}
-elseif ($chk == 'between')
-{
-  $where = "WHERE clean.Docdate BETWEEN '$date1' AND '$date2'";
-  $where_new = "WHERE newlinentable.Docdate BETWEEN '$date1' AND '$date2'";
-  list($year, $mouth, $day) = explode("-", $date1);
-  list($year2, $mouth2, $day2) = explode("-", $date2);
-  $datetime = new DatetimeTH();
-  if ($language == 'th')
-  {
-    $year2 = $year2 + 543;
-    $year = $year + 543;
-    $date_header = $array['date'][$language] . $day . " " . $datetime->getTHmonthFromnum($mouth) . " พ.ศ. " . $year . " " . $array['to'][$language] . " " .
-      $array['date'][$language] . $day2 . " " . $datetime->getTHmonthFromnum($mouth2) . " พ.ศ. " . $year2;
-  }
-  else
-  {
-    $date_header = $array['date'][$language] . $day . " " . $datetime->getmonthFromnum($mouth) . " " . $year . " " . $array['to'][$language] . " " .
-      $day2 . " " . $datetime->getmonthFromnum($mouth2) . " " .  $year2;
-  }
-}
-elseif ($chk == 'month')
-{
-  $where =   "WHERE month (clean.Docdate) = " . $date1;
-  $where_new = "WHERE month (newlinentable.Docdate) = " . $date1;
-  $datetime = new DatetimeTH();
-  if ($language == 'th')
-  {
-    $date_header = $array['month'][$language]  . " " . $datetime->getTHmonthFromnum($date1);
-  }
-  else
-  {
-    $date_header = $array['month'][$language] . " " . $datetime->getmonthFromnum($date1);
-  }
-}
-elseif ($chk == 'monthbetween')
-{
-  $where =   "WHERE date(clean.Docdate) BETWEEN '$betweendate1' AND '$betweendate2'";
-  $where_new =  "WHERE date(newlinentable.Docdate) BETWEEN '$betweendate1' AND '$betweendate2'";
-  list($year, $mouth, $day) = explode("-", $betweendate1);
-  list($year2, $mouth2, $day2) = explode("-", $betweendate2);
-  $datetime = new DatetimeTH();
-  if ($language == 'th')
-  {
-    $year = $year + 543;
-    $year2 = $year2 + 543;
-    $date_header = $array['month'][$language] . $datetime->getTHmonthFromnum($date1) . " $year " . $array['to'][$language] . " " . $datetime->getTHmonthFromnum($date2) . " $year2 ";
-  }
-  else
-  {
-    $date_header = $array['month'][$language] . $datetime->getmonthFromnum($date1) . " $year " . $array['to'][$language] . " " . $datetime->getmonthFromnum($date2) . " $year2 ";
-  }
 }
 
-/**
- * PHPExcel
- *
- * Copyright (C) 2006 - 2011 PHPExcel
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- *
- * @category   PHPExcel
- * @package    PHPExcel
- * @copyright  Copyright (c) 2006 - 2011 PHPExcel (http://www.codeplex.com/PHPExcel)
- * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version    1.7.6, 2011-02-27
- */
 
-/** Error reporting */
-error_reporting(E_ALL);
-
-/** PHPExcel */
-require_once 'PHPExcel-1.8/Classes/PHPExcel.php';
-
-// Create new PHPExcel object
-date('H:i:s') . " Create new PHPExcel object\n";
-$objPHPExcel = new PHPExcel();
-// Set properties
-date('H:i:s') . " Set properties\n";
-$objPHPExcel->getProperties()->setCreator("Maarten Balliauw")
-  ->setLastModifiedBy("Maarten Balliauw")
-  ->setTitle("Office 2007 XLSX Test Document")
-  ->setSubject("Office 2007 XLSX Test Document")
-  ->setDescription("Test document for Office 2007 XLSX, generated using PHP classes.")
-  ->setKeywords("office 2007 openxml php")
-  ->setCategory("Test result file");
-// Page margins:
-$objPHPExcel->getActiveSheet()
-  ->getPageSetup()
-  ->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_DEFAULT);
-$objPHPExcel->getActiveSheet()
-  ->getPageSetup()
-  ->setPaperSize(PHPExcel_Worksheet_PageSetup::PAPERSIZE_A4);
-$objPHPExcel->getActiveSheet()
-  ->getPageMargins()->setTop(1);
-$objPHPExcel->getActiveSheet()
-  ->getPageMargins()->setRight(0.75);
-$objPHPExcel->getActiveSheet()
-  ->getPageMargins()->setLeft(0.75);
-$objPHPExcel->getActiveSheet()
-  ->getPageMargins()->setBottom(1);
-$objPHPExcel->getActiveSheet()
-  ->getHeaderFooter()->setOddFooter('&R Page &P / &N');
-$objPHPExcel->getActiveSheet()
-  ->getHeaderFooter()->setEvenFooter('&R Page &P / &N');
-// Headers and Footers:
-// $objPHPExcel->getActiveSheet()
-//     ->getHeaderFooter()->setEvenFooter('&R&F Page &P / &N');
-// Printer page breaks:
-
-// $objPHPExcel->getActiveSheet()
-//   ->setBreak('A10', PHPExcel_Worksheet::BREAK_ROW);
-// // Showing grid lines:
-
-$objPHPExcel->getActiveSheet()
-  ->setShowGridlines(true);
-// Setting rows/columns to repeat at the top/left of each page
+if ($language == 'th') {
+    $printdate = date('d') . " " . $datetime->getTHmonth(date('F')) . " พ.ศ. " . $datetime->getTHyear(date('Y'));
+} else {
+    $printdate = date('d') . " " . date('F') . " " . date('Y');
+}
 
 
-// Setting the print area:
-// Add some data
+
+// import the PhpobjPHPExcel Class
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
+$objPHPExcel = new Spreadsheet();
+
+// การกำหนดค่า ข้อมูลเกี่ยวกับไฟล์ excel 
+$objPHPExcel->getProperties()
+    ->setCreator("Maarten Balliauw")
+    ->setLastModifiedBy("Maarten Balliauw")
+    ->setTitle("Office 2007 XLSX Test Document")
+    ->setSubject("Office 2007 XLSX Test Document")
+    ->setDescription(
+        "Test document for Office 2007 XLSX, generated using PHP classes."
+    )
+    ->setKeywords("office 2007 openxml php")
+    ->setCategory("Test result file");
+
+$date_cell1 = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z');
+$date_cell2 = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z');
+$round_AZ1 = sizeof($date_cell1);
+$round_AZ2 = sizeof($date_cell2);
+for ($a = 0; $a < $round_AZ1; $a++) {
+    for ($b = 0; $b < $round_AZ2; $b++) {
+        array_push($date_cell1, $date_cell1[$a] . $date_cell2[$b]);
+    }
+}
+
+
+
+
 
 $header = array($array2['docdate'][$language], $array2['receive_time'][$language], $array2['washing_time'][$language], $array2['packing_time'][$language], $array2['distribute_time'][$language], $array2['total'][$language]);
 $objPHPExcel->getActiveSheet()->mergeCells('C8:D8');
@@ -230,7 +166,7 @@ $objPHPExcel->getActiveSheet()->mergeCells('I8:J8');
 $objPHPExcel->getActiveSheet()->mergeCells('A8:A9');
 $objPHPExcel->getActiveSheet()->mergeCells('B8:B9');
 $objPHPExcel->getActiveSheet()->mergeCells('K8:K9');
-$objPHPExcel->setActiveSheetIndex()
+$objPHPExcel->setActiveSheetIndex(0)
   ->setCellValue('A8',  $array2['docno'][$language])
   ->setCellValue('B8',  $array2['docdate'][$language])
   ->setCellValue('C8',  $array2['receive_time'][$language])
@@ -238,7 +174,7 @@ $objPHPExcel->setActiveSheetIndex()
   ->setCellValue('G8',  $array2['packing_time'][$language])
   ->setCellValue('I8',  $array2['distribute_time'][$language])
   ->setCellValue('K8',  $array2['total'][$language]);
-$objPHPExcel->setActiveSheetIndex()
+$objPHPExcel->setActiveSheetIndex(0)
   ->setCellValue('C9',  $array2['start'][$language])
   ->setCellValue('D9',  $array2['finish'][$language])
   ->setCellValue('E9',  $array2['start'][$language])
@@ -268,6 +204,8 @@ else
 {
   $printdate = date('d') . " " . date('F') . " " . date('Y');
 }
+
+
 
 $objPHPExcel->getActiveSheet()->setCellValue('K1', $array2['printdate'][$language] . $printdate);
 $objPHPExcel->getActiveSheet()->setCellValue('A5', $array2['r15'][$language]);
@@ -355,8 +293,14 @@ for ($i = 0; $i < 3; $i++)
     $two[0] = str_replace("-", '', $two[0]);
     $three[0] = str_replace("-", '', $three[0]);
     $four[0] = str_replace("-", '', $four[0]);
-    $hous = $one[0] + $two[0] + $three[0] + $four[0];
-    $mins = $one[1] + $two[1] + $three[1] + $four[1];
+    $hous = $one[0] . $two[0] . $three[0] . $four[0];
+
+    $one1 = isset($one[1])?$one[1]:0;
+    $two1 = isset($two[1])?$two[1]:0;
+    $three1 = isset($three[1])?$three[1]:0;
+    $four1 = isset($four[1])?$four[1]:0;
+
+    $mins = $one1 . $two1 . $three1. $four1 ;
     if ($mins >= 60)
     {
       $Ansmin = $mins / 60;
@@ -380,72 +324,70 @@ for ($i = 0; $i < 3; $i++)
   }
 }
 
+
+
 $styleArray = array(
-  'borders' => array(
 
-    'allborders' => array(
+    'borders' => array(
 
-      'style' => PHPExcel_Style_Border::BORDER_THIN
+      'allborders' => array(
+
+        'style' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN
+      )
     )
-  )
-);
-$objPHPExcel->getActiveSheet()->getStyle('A8:K' . $start_data)->applyFromArray($styleArray);
-$CENTER = array(
-  'alignment' => array(
-    'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
-    'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
-  ),
-  'font'  => array(
-    'size'  => 8,
-    'name'  => 'THSarabun'
-  )
-);
-$objPHPExcel->getActiveSheet()->getStyle('A8:K' . $start_data)->applyFromArray($CENTER);
-$r = array(
-  'alignment' => array(
-    'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
-  ),
-  'font'  => array(
-    'bold'  => true,
-    // 'color' => array('rgb' => 'FF0000'),
-    'size'  => 16,
-    'name'  => 'THSarabun'
-  )
-);
-$objPHPExcel->getActiveSheet()->getStyle('A5')->applyFromArray($r);
+  );
+  $objPHPExcel->getActiveSheet()->getStyle('A8:K' . $start_data)->applyFromArray($styleArray);
+
+  $CENTER = array(
+    'alignment' => array(
+      'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+      'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+    ),
+    'font'  => array(
+      'size'  => 8,
+      'name'  => 'THSarabun'
+    )
+  );
+
+  $objPHPExcel->getActiveSheet()->getStyle('A8:K' . $start_data)->applyFromArray($CENTER);
+
+  $r = array(
+    'alignment' => array(
+      'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+    ),
+    'font'  => array(
+      'size'  => 16,
+      'name'  => 'THSarabun'
+    )
+  );
+
+
+  $objPHPExcel->getActiveSheet()->getStyle('A5')->applyFromArray($r);
+
+
+
+
 $cols = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K');
 $width = array(20, 20, 8, 8, 8, 8, 8, 8, 8, 8, 20);
 for ($j = 0; $j < count($cols); $j++) {
   $objPHPExcel->getActiveSheet()->getColumnDimension($cols[$j])->setWidth($width[$j]);
 }
-$objDrawing = new PHPExcel_Worksheet_Drawing();
-$objDrawing->setName('test_img');
-$objDrawing->setDescription('test_img');
-$objDrawing->setPath('Nhealth_linen 4.0.png');
-$objDrawing->setCoordinates('A1');
-//setOffsetX works properly
-$objDrawing->setOffsetX(0);
-$objDrawing->setOffsetY(0);
-//set width, height
-$objDrawing->setWidthAndHeight(150, 75);
-$objDrawing->setResizeProportional(true);
-$objDrawing->setWorksheet($objPHPExcel->getActiveSheet());
-// Rename worksheet
-$objPHPExcel->getActiveSheet()->setTitle('Report_Tracking_status_for_laundry_plant');
-// Set active sheet index to the first sheet, so Excel opens this as the first sheet
+
+$writer = new Xlsx($objPHPExcel);
+
+$objPHPExcel->getActiveSheet()->setTitle('Report_Tracking_status');
 $objPHPExcel->setActiveSheetIndex(0);
-//ตั้งชื่อไฟล์
+
+
 $time  = date("H:i:s");
 $date  = date("Y-m-d");
 list($h, $i, $s) = explode(":", $time);
-$file_name = "Report_Tracking_status_for_laundry_plant_xls_" . $date . "_" . $h . "_" . $i . "_" . $s . ")";
-// Save Excel 2007 file
-#echo date('H:i:s') . " Write to Excel2007 format\n";
-$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-ob_end_clean();
-// We'll be outputting an excel file
-header('Content-type: application/vnd.ms-excel');
-// It will be called file.xls
-header('Content-Disposition: attachment;filename="' . $file_name . '.xlsx"');
-$objWriter->save('php://output');
+$file_export = "Report_Tracking_status_for_laundry_plant_xls_" . $date . "_" . $h . "_" . $i . "_" . $s . ")";
+
+
+header('Content-Type: application/vnd.openxmlformats-officedocument.objPHPExcelml.sheet');
+header('Content-Disposition: attachment;filename="' . $file_export . '.xlsx"');
+header("Content-Transfer-Encoding: binary ");
+
+$writer->save('php://output');
 exit();

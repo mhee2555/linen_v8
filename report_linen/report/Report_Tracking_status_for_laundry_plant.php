@@ -5,7 +5,7 @@ require('Class.php');
 header('Content-Type: text/html; charset=utf-8');
 date_default_timezone_set("Asia/Bangkok");
 session_start();
-$data_send = ['HptCode' => $HptCode, 'FacCode' => $FacCode, 'date1' => $date1, 'date2' => $date2,   'betweendate1' => $betweendate1, 'betweendate2' => $betweendate2, 'Format' => $Format, 'DepCode' => $DepCode, 'chk' => $chk];
+// $data_send = ['HptCode' => $HptCode, 'FacCode' => $FacCode, 'date1' => $date1, 'date2' => $date2,   'betweendate1' => $betweendate1, 'betweendate2' => $betweendate2, 'Format' => $Format, 'DepCode' => $DepCode, 'chk' => $chk];
 
 $data = explode(',', $_GET['data']);
 // echo "<pre>";
@@ -120,6 +120,7 @@ class PDF extends FPDF
     // Column widths
     $w = $width;
     // Header
+    $rows = 1;
     $this->SetFont('THSarabun', 'b', 12);
     if ($i == 0 || $rows == 11) {
       $this->Cell($w[0], 20, iconv("UTF-8", "TIS-620", $header[6]), 1, 0, 'C');
@@ -160,16 +161,26 @@ class PDF extends FPDF
             $min_show = " mins ";
           }
         }
-        list($hours1, $min1, $secord1) = explode(":", $inner_array[$field[12]]);
-        list($hours2, $min2, $secord2) = explode(":", $inner_array[$field[13]]);
-        list($hours3, $min3, $secord3) = explode(":", $inner_array[$field[14]]);
-        list($hours4, $min4, $secord4) = explode(":", $inner_array[$field[11]]);
-        $hours1 = str_replace("-", '', $hours1);
-        $hours2 = str_replace("-", '', $hours2);
-        $hours3 = str_replace("-", '', $hours3);
-        $hours4 = str_replace("-", '', $hours4);
-        $hous = $hours1 + $hours2 + $hours3 + $hours4;
-        $mins = $min1 + $min2 + $min3 + $min4;
+
+
+
+
+        $hoursAnDmin1 = explode(":", $inner_array[$field[10]]);
+        $hoursAnDmin2 = explode(":", $inner_array[$field[11]]);
+        $hoursAnDmin3 = explode(":", $inner_array[$field[12]]);
+        $hoursAnDmin4 = explode(":", $inner_array[$field[9]]);
+        $hours1 = str_replace("-", '', $hoursAnDmin1[0]);
+        $hours2 = str_replace("-", '', $hoursAnDmin2[0]);
+        $hours3 = str_replace("-", '', $hoursAnDmin3[0]);
+        $hours4 = str_replace("-", '', $hoursAnDmin4[0]);
+        $hous = (int)$hours1 + (int)$hours2 + (int)$hours3 + (int)$hours4;
+
+        $hoursAnDmin1[1] = isset($hoursAnDmin1[1])?$hoursAnDmin1[1]:00;
+        $hoursAnDmin2[1] = isset($hoursAnDmin2[1])?$hoursAnDmin2[1]:00;
+        $hoursAnDmin3[1] = isset($hoursAnDmin3[1])?$hoursAnDmin3[1]:00;
+        $hoursAnDmin4[1] = isset($hoursAnDmin4[1])?$hoursAnDmin4[1]:00;
+
+        $mins = $hoursAnDmin1[1] + $hoursAnDmin2[1] + $hoursAnDmin3[1] + $hoursAnDmin4[1];
         if ($mins >= 60) {
           $Ansmin = $mins / 60;
           $Ansmin = (int) ($Ansmin);
@@ -180,7 +191,7 @@ class PDF extends FPDF
         $this->SetFont('THSarabun', '', 12);
         $this->Cell($w[0], 10, iconv("UTF-8", "TIS-620", $inner_array[$field[0]]), 1, 0, 'C');
         $this->SetFont('THSarabun', '', 12);
-        $this->Cell($w[0], 10, iconv("UTF-8", "TIS-620", $inner_array[$field[10]]), 1, 0, 'C');
+        $this->Cell($w[0], 10, iconv("UTF-8", "TIS-620", $inner_array[$field[8]]), 1, 0, 'C');
         $this->Cell(20, 10, iconv("UTF-8", "TIS-620", substr($inner_array[$field[1]], 0, 5)), 1, 0, 'C');
         $this->Cell(20, 10, iconv("UTF-8", "TIS-620", substr($inner_array[$field[2]], 0, 5)), 1, 0, 'C');
         $this->Cell(20, 10, iconv("UTF-8", "TIS-620", substr($inner_array[$field[3]], 0, 5)), 1, 0, 'C');
@@ -213,7 +224,7 @@ class PDF extends FPDF
         }
       }
     }
-    $field = "DocNo1,ReceiveDate1,WashStartTime,WashStartTime,WashEndTime,PackStartTime,PackEndTime,SendStartTime,SendEndTime";
+    $field = "DocNo1,ReceiveDate1,WashStartTime,WashEndTime,PackStartTime,PackEndTime,SendStartTime,SendEndTime";
     // Footer Table
 
 
@@ -280,7 +291,7 @@ $pdf->Ln(10);
 $pdf->SetFont('THSarabun', 'b', 14);
 $pdf->Cell(1);
 $pdf->Cell(165, 10, iconv("UTF-8", "TIS-620", $array2['factory'][$language] . " : " . $Facname), 0, 0, 'L');
-$pdf->Cell(ุ60 , 10, iconv("UTF-8", "TIS-620", $date_header), 0, 0, 'R');
+$pdf->Cell(60 , 10, iconv("UTF-8", "TIS-620", $date_header), 0, 0, 'R');
 $pdf->Ln(12);
 $HptCode = substr($HptCode, 0, 3);
 $doc = array('dirty', 'repair_wash', 'newlinentable');
@@ -295,7 +306,7 @@ for ($i = 0; $i < 3; $i++) {
   } elseif ($chk == 'between') {
     $where =   "WHERE " . $doc[$i] . ".Docdate BETWEEN '$date_query1' AND '$date_query2'";
   } elseif ($chk == 'month') {
-    $where =   "WHERE month (" . $doc[$i] . ".Docdate) = " . $date_query1;
+    $where =   "WHERE month (" . $doc[$i] . ".Docdate) = " . $date_query1 . " AND YEAR (" . $doc[$i] . ".Docdate) = 2022 "  ;
   } elseif ($chk == 'monthbetween') {
     $where =   "WHERE date(" . $doc[$i] . ".Docdate) BETWEEN '$betweendate1' AND '$betweendate2'";
   }
@@ -319,10 +330,12 @@ process
 LEFT JOIN $doc[$i] ON process.DocNo = $doc[$i].DocNo
 $where AND $FacCode in ($doc[$i].FacCode)
 AND process.isStatus <> 9 ";
+
+
   // Number of column
   $numfield = 6;
   // Field data (Must match with Query)
-  $field = "DocNo1,ReceiveDate1,WashStartTime,WashStartTime,WashEndTime,PackStartTime,PackEndTime,SendStartTime,SendEndTime,Total,Date1,TIME,wash,pack,send";
+  $field = "DocNo1,ReceiveDate1,WashStartTime,WashEndTime,PackStartTime,PackEndTime,SendStartTime,SendEndTime,Date1,TIME,wash,pack,send";
   // Table header
   $header = array($array2['docdate'][$language], $array2['receive_time'][$language], $array2['washing_time'][$language], $array2['packing_time'][$language], $array2['distribute_time'][$language], $array2['total'][$language], $array2['docno'][$language]);
   // width of column table

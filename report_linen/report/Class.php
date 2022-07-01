@@ -35,7 +35,9 @@ Class Data {
         }
         $query = null;
         $db = null;
-        return $Data;
+
+        return  isset($Data)?$Data:'';
+
     }
 }
 

@@ -13,17 +13,17 @@ $array = json_decode($json, TRUE);
 $json2 = json_encode($xml2);
 $array2 = json_decode($json2, TRUE);
 //--------------------------------------------------------------------------
-$data = $_SESSION['data_send'];
-$HptCode = $_SESSION['HptCode'];
-$FacCode = $data['FacCode'];
-$date1 = $data['date1'];
-$date2 = $data['date2'];
-$chk = $data['chk'];
-$year = $data['year'];
-$format = $data['Format'];
-$DepCode = $data['DepCode'];
-$betweendate1 = $data['betweendate1'];
-$betweendate2 = $data['betweendate2'];
+// $data = $_SESSION['data_send'];
+// $HptCode = $_SESSION['HptCode'];
+// $FacCode = $data['FacCode'];
+// $date1 = $data['date1'];
+// $date2 = $data['date2'];
+// $chk = $data['chk'];
+// $year = $data['year'];
+// $format = $data['Format'];
+// $DepCode = $data['DepCode'];
+// $betweendate1 = $data['betweendate1'];
+// $betweendate2 = $data['betweendate2'];
 $docno = $_GET['Docno'];
 //--------------------------------------------------------------------------
 $where = '';
@@ -122,6 +122,21 @@ class MYPDF extends TCPDF
     $packing = '';
     $passengertime = '';
     $receiver = '';
+    $date1 = null;
+    $date2 = null;
+    $date3 = null;
+    $y1 = null;
+    $y2 = null;
+    $y3 = null;
+    $d1 = null;
+    $d2 = null;
+    $d3 = null;
+    $m1 = null;
+    $m2 = null;
+    $m3 = null;
+    $time1 = null;
+    $time2 = null;
+    $time3 = null;
     $this->SetFont(' thsarabunnew', '', 8);
     if ($this->last_page_flag) {
       require('connect.php');
@@ -134,8 +149,7 @@ class MYPDF extends TCPDF
               shelfcount.PTime AS packingtime
                 FROM
                 shelfcount
-                where shelfcount.DocNo ='$docno'
-      ";
+                where shelfcount.DocNo ='$docno' ";
 
       $meQuery = mysqli_query($conn, $head);
       while ($Result = mysqli_fetch_assoc($meQuery)) {
@@ -146,12 +160,27 @@ class MYPDF extends TCPDF
         $passengertime = $Result['passengertime'];
         $receivertime = $Result['receivertime'];
       }
-      list($date1, $time1) = explode(' ', $packingtime);
-      list($date2, $time2) = explode(' ', $passengertime);
-      list($date3, $time3) = explode(' ', $receivertime);
-      list($y1, $m1, $d1) = explode('-', $date1);
-      list($y2, $m2, $d2) = explode('-', $date2);
-      list($y3, $m3, $d3) = explode('-', $date3);
+
+
+      if ($packingtime != null) {
+        list($date1, $time1) = explode(' ', $packingtime);
+      }
+      if ($passengertime != null) {
+        list($date2, $time2) = explode(' ', $passengertime);
+      }
+      if ($receivertime != null) {
+        list($date3, $time3) = explode(' ', $receivertime);
+      }
+      if($date1 != null){
+        list($y1, $m1, $d1) = explode('-', $date1);
+      }
+      if($date2 != null){
+        list($y2, $m2, $d2) = explode('-', $date2);
+      }
+      if($date3 != null){
+        list($y3, $m3, $d3) = explode('-', $date3);
+      }
+
       if ($language == 'th') {
         $y1 = $y1 + 543;
         $y2 = $y2 + 543;
@@ -248,11 +277,11 @@ $pdf->SetAutoPageBreak(TRUE, 35);
 $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 // ------------------------------------------------------------------------------
 if ($language == 'th') {
-  $HptName = HptNameTH;
-  $FacName = FacNameTH;
+  $HptName = 'HptNameTH';
+  $FacName = 'FacNameTH';
 } else {
-  $HptName = HptName;
-  $FacName = FacName;
+  $HptName = 'HptName';
+  $FacName = 'FacName';
 }
 $header = array($array2['no']['en'], $array2['itemname']['en'], $array2['parqty']['en'], $array2['shelfcount1']['en'], $array2['max']['en'], $array2['issue']['en'], $array2['short']['en'], $array2['over']['en'], $array2['weight']['en'], $array2['price']['en']);
 $count = 1;
@@ -351,6 +380,8 @@ $y=$y+543;
   $y=$y;
 }
 $DocDate =$d.'-'.$m.'-'.$y;
+$W = "";
+$P = "";
 // --------------------------------------------------------
 // set font
 // add a page
@@ -382,11 +413,13 @@ if ($money == 1) {
 $html .= '</tr></thead>';
 $pdf->SetFont('  thsarabunnew', '', 12);
 $meQuery = mysqli_query($conn, $data);
+$totalweight = 0;
+$totalsum_W = 0;
+$price_W = 0;
 while ($Result = mysqli_fetch_assoc($meQuery)) {
   $issue = $Result['ParQty'] - $Result['CcQty'];
   $totalweight = $Result['TotalQty'] * $Result['Weight'];
   $price = $totalweight * $Result['Price'];
-  $Total_Weight = $Result['Totalqty'] * $Result['Weight'];
   $html .= '<tr cellpadding="3" style="font-size: 15px;" nobr="true">';
   $html .=   '<td width="' . $w[0] . '% " align="center" height="7">' . $count . '</td>';
   $html .=   '<td width="' . $w[1] . '% " align="left"  >' . trim($Result['ItemName']) . '</td>';

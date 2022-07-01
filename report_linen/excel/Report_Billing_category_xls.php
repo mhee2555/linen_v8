@@ -1,18 +1,16 @@
 <?php
-// ini_set('mysql.connect_timeout', 300);
-// ini_set('default_socket_timeout', 300); 
-include("PHPExcel-1.8/Classes/PHPExcel.php");
-require('../report/connect.php');
+// include composer autoload
+include_once('connect.php');
+require 'vendor/autoload.php';
 require('../report/Class.php');
-header('Content-Type: text/html; charset=utf-8');
-date_default_timezone_set("Asia/Bangkok");
-session_start();
-$language = $_SESSION['lang'];
-if ($language == "en") {
-  $language = "en";
-} else {
-  $language = "th";
-}
+
+
+// $language = $_SESSION['lang'];
+// if ($language == "en") {
+//     $language = "en";
+// } else {
+    $language = "th";
+// }
 $xml = simplexml_load_file('../xml/general_lang.xml');
 $xml2 = simplexml_load_file('../xml/report_lang.xml');
 $json = json_encode($xml);
@@ -20,9 +18,7 @@ $array = json_decode($json, TRUE);
 $json2 = json_encode($xml2);
 $array2 = json_decode($json2, TRUE);
 $data = explode(',', $_GET['data']);
-// echo "<pre>";
-// print_r($data);
-// echo "</pre>";
+
 $HptCode = $data[0];
 $FacCode = $data[1];
 $date1 = $data[2];
@@ -57,157 +53,150 @@ if ($language == 'th') {
   $FacName = 'FacName';
 }
 
-if ($chk == 'one') 
-{
-  if ($format == 1) {
-    $where =   "WHERE DATE (report_sc.Docdate) = DATE('$date1')";
+// header
+
+if ($chk == 'one') {
+    if ($format == 1) {
+        list($year, $mouth, $day) = explode("-", $date1);
+        $datetime = new DatetimeTH();
+        if ($language == 'th') {
+            $year = $year + 543;
+            $date_header = $array['date'][$language] . $day . " " . $datetime->getTHmonthFromnum($mouth) . " พ.ศ. " . $year;
+        } else {
+            $date_header = $array['date'][$language] . $day . " " . $datetime->getmonthFromnum($mouth) . " " . $year;
+        }
+    } elseif ($format = 3) {
+        if ($language == "th") {
+            $date1 = $date1 + 543;
+            $date_header = $array['year'][$language] . " " . $date1;
+        } else {
+            $date_header = $array['year'][$language] . $date1;
+        }
+    }
+} elseif ($chk == 'between') {
     list($year, $mouth, $day) = explode("-", $date1);
+    list($year2, $mouth2, $day2) = explode("-", $date2);
     $datetime = new DatetimeTH();
     if ($language == 'th') {
-      $year = $year + 543;
-      $date_header = $array['date'][$language] . $day . " " . $datetime->getTHmonthFromnum($mouth) . " พ.ศ. " . $year;
+        $year2 = $year2 + 543;
+        $year = $year + 543;
+        $date_header = $array['date'][$language] . $day . " " . $datetime->getTHmonthFromnum($mouth) . " พ.ศ. " . $year . $array['to'][$language] .
+            $array['date'][$language] . $day2 . " " . $datetime->getTHmonthFromnum($mouth2) . " พ.ศ. " . $year2;
     } else {
-      $date_header = $array['date'][$language] . $day . " " . $datetime->getmonthFromnum($mouth) . " " . $year;
+        $date_header = $array['date'][$language] . $day . " " . $datetime->getmonthFromnum($mouth) . " " . $year . " " . $array['to'][$language] . " " .
+            $day2 . " " . $datetime->getmonthFromnum($mouth2) . " " . $year2;
     }
-  } elseif ($format = 3) {
-    $where = "WHERE  year (report_sc.DocDate) LIKE '%$date1%'";
-    if ($language == "th") {
-      $date1 = $date1 + 543;
-      $date_header = $array['year'][$language] . " " . $date1;
+} elseif ($chk == 'month') {
+    $datetime = new DatetimeTH();
+    if ($language == 'th') {
+        $date_header = $array['month'][$language]  . " " . $datetime->getTHmonthFromnum($date1);
     } else {
-      $date_header = $array['year'][$language] . $date1;
+        $date_header = $array['month'][$language] . " " . $datetime->getmonthFromnum($date1);
     }
-  }
-} 
-elseif ($chk == 'between')
-{
-  $where =   "WHERE report_sc.Docdate BETWEEN '$date1' AND '$date2'";
-  list($year, $mouth, $day) = explode("-", $date1);
-  list($year2, $mouth2, $day2) = explode("-", $date2);
-  $datetime = new DatetimeTH();
-  if ($language == 'th') {
-    $year2 = $year2 + 543;
-    $year = $year + 543;
-    $date_header = $array['date'][$language] . $day . " " . $datetime->getTHmonthFromnum($mouth) . " พ.ศ. " . $year . $array['to'][$language] .
-      $array['date'][$language] . $day2 . " " . $datetime->getTHmonthFromnum($mouth2) . " พ.ศ. " . $year2;
-  } else {
-    $date_header = $array['date'][$language] . $day . " " . $datetime->getmonthFromnum($mouth) . " " . $year . " " . $array['to'][$language] . " " .
-      $day2 . " " . $datetime->getmonthFromnum($mouth2) . " " . $year2;
-  }
-} 
-elseif ($chk == 'month') 
-{
-  $where =   "WHERE month (report_sc.Docdate) = " . $date1;
-  $datetime = new DatetimeTH();
-  if ($language == 'th') {
-    $date_header = $array['month'][$language]  . " " . $datetime->getTHmonthFromnum($date1);
-  } else {
-    $date_header = $array['month'][$language] . " " . $datetime->getmonthFromnum($date1);
-  }
-} elseif ($chk == 'monthbetween') 
-{
-  $where =   "WHERE DATE(report_sc.DocDate) BETWEEN '$betweendate1' AND '$betweendate2'";
-  list($year, $mouth, $day) = explode("-", $betweendate1);
-  list($year2, $mouth2, $day2) = explode("-", $betweendate2);
-  $datetime = new DatetimeTH();
-  if ($language == 'th') {
-    $year = $year + 543;
-    $year2 = $year2 + 543;
-    $date_header = $array['month'][$language] . $datetime->getTHmonthFromnum($date1) . " $year " . $array['to'][$language] . " " . $datetime->getTHmonthFromnum($date2) . " $year2 ";
-  } else {
-    $date_header = $array['month'][$language] . $datetime->getmonthFromnum($date1) . " $year " . $array['to'][$language] . " " . $datetime->getmonthFromnum($date2) . " $year2 ";
-  }
+} elseif ($chk == 'monthbetween') {
+    list($year, $mouth, $day) = explode("-", $betweendate1);
+    list($year2, $mouth2, $day2) = explode("-", $betweendate2);
+    $datetime = new DatetimeTH();
+    if ($language == 'th') {
+        $year = $year + 543;
+        $year2 = $year2 + 543;
+        $date_header = $array['month'][$language] . $datetime->getTHmonthFromnum($date1) . " $year " . $array['to'][$language] . " " . $datetime->getTHmonthFromnum($date2) . " $year2 ";
+    } else {
+        $date_header = $array['month'][$language] . $datetime->getmonthFromnum($date1) . " $year " . $array['to'][$language] . " " . $datetime->getmonthFromnum($date2) . " $year2 ";
+    }
 }
-if ($language == 'th') 
-{
-  $printdate = date('d') . " " . $datetime->getTHmonth(date('F')) . " พ.ศ. " . $datetime->getTHyear(date('Y'));
-} 
-else 
-{
-  $printdate = date('d') . " " . date('F') . " " . date('Y');
+
+
+if ($language == 'th') {
+    $printdate = date('d') . " " . $datetime->getTHmonth(date('F')) . " พ.ศ. " . $datetime->getTHyear(date('Y'));
+} else {
+    $printdate = date('d') . " " . date('F') . " " . date('Y');
 }
-/**
- * PHPExcel
- *
- * Copyright (C) 2006 - 2011 PHPExcel
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- *
- * @category   PHPExcel
- * @package    PHPExcel
- * @copyright  Copyright (c) 2006 - 2011 PHPExcel (http://www.codeplex.com/PHPExcel)
- * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt	LGPL
- * @version    1.7.6, 2011-02-27
- */
 
-/** Error reporting */
-error_reporting(E_ALL);
 
-/** PHPExcel */
-require_once 'PHPExcel-1.8/Classes/PHPExcel.php';
 
-// Create new PHPExcel object
-date('H:i:s') . " Create new PHPExcel object\n";
-$objPHPExcel = new PHPExcel();
-// Set properties
-date('H:i:s') . " Set properties\n";
-$objPHPExcel->getProperties()->setCreator("Maarten Balliauw")
-  ->setLastModifiedBy("Maarten Balliauw")
-  ->setTitle("Office 2007 XLSX Test Document")
-  ->setSubject("Office 2007 XLSX Test Document")
-  ->setDescription("Test document for Office 2007 XLSX, generated using PHP classes.")
-  ->setKeywords("office 2007 openxml php")
-  ->setCategory("Test result file");
-// Page margins:
-$objPHPExcel->getActiveSheet()
-  ->getPageSetup()
-  ->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_DEFAULT);
-$objPHPExcel->getActiveSheet()
-  ->getPageSetup()
-  ->setPaperSize(PHPExcel_Worksheet_PageSetup::PAPERSIZE_A4);
-$objPHPExcel->getActiveSheet()
-  ->getPageMargins()->setTop(1);
-$objPHPExcel->getActiveSheet()
-  ->getPageMargins()->setRight(0.75);
-$objPHPExcel->getActiveSheet()
-  ->getPageMargins()->setLeft(0.75);
-$objPHPExcel->getActiveSheet()
-  ->getPageMargins()->setBottom(1);
-$objPHPExcel->getActiveSheet()
-  ->getHeaderFooter()->setOddFooter('&R Page &P / &N');
-$objPHPExcel->getActiveSheet()
-  ->getHeaderFooter()->setEvenFooter('&R Page &P / &N');
+// import the PhpobjPHPExcel Class
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
-$objPHPExcel->getActiveSheet()
-  ->setShowGridlines(true);
-// Setting rows/columns to repeat at the top/left of each page
+$objPHPExcel = new Spreadsheet();
+
+// การกำหนดค่า ข้อมูลเกี่ยวกับไฟล์ excel 
+$objPHPExcel->getProperties()
+    ->setCreator("Maarten Balliauw")
+    ->setLastModifiedBy("Maarten Balliauw")
+    ->setTitle("Office 2007 XLSX Test Document")
+    ->setSubject("Office 2007 XLSX Test Document")
+    ->setDescription(
+        "Test document for Office 2007 XLSX, generated using PHP classes."
+    )
+    ->setKeywords("office 2007 openxml php")
+    ->setCategory("Test result file");
+
 $date_cell1 = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z');
 $date_cell2 = array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z');
 $round_AZ1 = sizeof($date_cell1);
 $round_AZ2 = sizeof($date_cell2);
-for ($a = 0; $a < $round_AZ1; $a++) 
-{
-  for ($b = 0; $b < $round_AZ2; $b++) 
-  {
-    array_push($date_cell1, $date_cell1[$a] . $date_cell2[$b]);
-  }
+for ($a = 0; $a < $round_AZ1; $a++) {
+    for ($b = 0; $b < $round_AZ2; $b++) {
+        array_push($date_cell1, $date_cell1[$a] . $date_cell2[$b]);
+    }
 }
-// echo "<pre>";
-// print_r($date_cell1);
-// echo "</pre>"; 
-// =============================================================================
+
+
+if ($chk == 'one') {
+    if ($format == 1) {
+        $count = 1;
+        $date[] = $date1;
+        list($y, $m, $d) = explode('-', $date1);
+        if ($language ==  'th') {
+            $y = $y + 543;
+        }
+        $date1 = $d . '-' . $m . '-' . $y;
+        $DateShow[] = $date1;
+    }
+} elseif ($chk == 'between') {
+    $begin = new DateTime($date1);
+    $end = new DateTime($date2);
+    $end = $end->modify('1 day');
+
+    $interval = new DateInterval('P1D');
+    $period = new DatePeriod($begin, $interval, $end);
+    foreach ($period as $key => $value) {
+        $date[] = $value->format('Y-m-d');
+    }
+    $count = count($date);
+    for ($i = 0; $i < $count; $i++) {
+        $date1 = $date[$i];
+        list($y, $m, $d) = explode('-', $date1);
+        if ($language ==  'th') {
+            $y = $y + 543;
+        }
+        $date1 = $d . '-' . $m . '-' . $y;
+        $DateShow[] = $date1;
+    }
+} elseif ($chk == 'month') {
+    $day = 1;
+    if ($language ==  'th') {
+        $y = $year1 + 543;
+    } else {
+        $y = $year1;
+    }
+    $count = cal_days_in_month(CAL_GREGORIAN, $date1, $year1);
+    $datequery =  $year1 . '-' . $date1 . '-';
+    $dateshow = '-' . $date1 . '-' . $y;
+    for ($i = 0; $i < $count; $i++) {
+        if ($day < 10) {
+            $day = '0' . $day;
+        }
+        $date[] = $datequery . $day;
+        $DateShow[] = $day . $dateshow;
+        $day++;
+    }
+}
+
+
+
 if ($GroupCodeCome == '0') 
 {
   $query = "SELECT
@@ -246,523 +235,483 @@ else
 {
   $categorywhere = "AND report_billing_detail.CategoryCode = '$categoryCodeCome' ";
 }
-// -----------------------------------------------------------------------------------
-if ($chk == 'one')
-{
-  if ($format == 1)
-  {
-    $count = 1;
-    $date[] = $date1;
-    list($y, $m, $d) = explode('-', $date1);
-    if ($language ==  'th')
-    {
-      $y = $y + 543;
-    }
-    $date1 = $d . '-' . $m . '-' . $y;
-    $DateShow[] = $date1;
-  }
-}
-elseif ($chk == 'between')
-{
-  $begin = new DateTime( $date1 );
-  $end = new DateTime( $date2 );
-  $end = $end->modify( '1 day' );
 
-  $interval = new DateInterval('P1D');
-  $period = new DatePeriod($begin, $interval ,$end);
-  foreach ($period as $key => $value)
-  {
-    $date[] = $value->format('Y-m-d');
-  }
-  $count = count($date);
-  for ($i = 0; $i < $count; $i++)
-  {
-    $date1 = $date[$i];
-    list($y, $m, $d) = explode('-', $date1);
-    if ($language ==  'th')
-    {
-      $y = $y + 543;
-    }
-    $date1 = $d . '-' . $m . '-' . $y;
-    $DateShow[] = $date1;
-  }
-}
-elseif ($chk == 'month')
-{
-  $day = 1;
-  if ($language ==  'th')
-  {
-    $y = $year1 + 543;
-  }
-  else
-  {
-    $y = $year1;
-  }
-  $count = cal_days_in_month(CAL_GREGORIAN, $date1, $year1);
-  $datequery =  $year1 . '-' . $date1 . '-';
-  $dateshow = '-' . $date1 . '-' . $y;
 
-  for ($i = 0; $i < $count; $i++) 
-  {
-    if($day < 10)
-    {
-      $day = '0'.$day;
-    }
-    $date[] = $datequery . $day;
-    $DateShow[] = $day . $dateshow;
-    $day++;
-  }
-  
-}
 $sheet_count = sizeof($GroupCode);
+$deletesheet = 0;
 for ($sheet = 0; $sheet < $sheet_count; $sheet++) 
 {
-  $status_group == 0;
-  // -----------------------------------------------------------------------------------
-  $objPHPExcel->setActiveSheetIndex($sheet)
-    ->setCellValue('A8',  'GROUP NAME')
-    ->setCellValue('B8',  $array['department'][$language])
-    ->setCellValue('C8',  'STATUS_DEPARTMENT');
-  // Write data from MySQL result
-  $objPHPExcel->getActiveSheet()->setCellValue('E1', $array2['printdate'][$language] . $printdate);
-  $objPHPExcel->getActiveSheet()->setCellValue('A4', $array2['r31'][$language]);
-  $objPHPExcel->getActiveSheet()->setCellValue('A5', $date_header);
-  // $objPHPExcel->getActiveSheet()->setCellValue('A6', $CategoryName[0]);
-  $objPHPExcel->getActiveSheet()->setCellValue('A7', 'รายละเอียด');
-  $objPHPExcel->getActiveSheet()->mergeCells('A4:J4');
-  $objPHPExcel->getActiveSheet()->mergeCells('A5:J5');
-  $objPHPExcel->getActiveSheet()->mergeCells('A6:J6');
-  $objPHPExcel->getActiveSheet()->mergeCells('A7:C7');
-  // -----------------------------------------------------------------------------------
-  $query = "SELECT
-              grouphpt.GroupName,
-              department.DepCode,
-              department.DepName,
-              department.IsActive 
+    $objPHPExcel->setActiveSheetIndex($sheet);
+    $objPHPExcel->getActiveSheet()->setCellValue('A8', 'GROUP NAME');
+    $objPHPExcel->getActiveSheet()->setCellValue('B8', $array['department'][$language]);
+    $objPHPExcel->getActiveSheet()->setCellValue('C8', 'STATUS_DEPARTMENT');
+    $objPHPExcel->getActiveSheet()->setCellValue('E1', $array2['printdate'][$language] . $printdate);
+    $objPHPExcel->getActiveSheet()->setCellValue('A4', $array2['r31'][$language]);
+    $objPHPExcel->getActiveSheet()->setCellValue('A5', $date_header);
+    $objPHPExcel->getActiveSheet()->setCellValue('A7', 'รายละเอียด');
+    $objPHPExcel->getActiveSheet()->mergeCells('A4:J4');
+    $objPHPExcel->getActiveSheet()->mergeCells('A5:J5');
+    $objPHPExcel->getActiveSheet()->mergeCells('A6:J6');
+    $objPHPExcel->getActiveSheet()->mergeCells('A7:C7');
+
+
+    $query = "SELECT
+                grouphpt.GroupName,
+                department.DepCode,
+                department.DepName,
+                department.IsActive 
             FROM
-              report_billing_detail
-              INNER JOIN department ON department.DepCode = report_billing_detail.DepCode
-              INNER JOIN grouphpt ON grouphpt.GroupCode = report_billing_detail.Groupcode 
+                report_billing_detail
+                INNER JOIN department ON department.DepCode = report_billing_detail.DepCode
+                INNER JOIN grouphpt ON grouphpt.GroupCode = report_billing_detail.Groupcode 
             WHERE
-                   grouphpt.GroupCode = '$GroupCode[$sheet]'
-                  $categorywhere
-                  AND  DATE(report_billing_detail.DocDate) IN (";
-                      for ($day = 0; $day < $count; $day++) {
-   
+                    grouphpt.GroupCode = '$GroupCode[$sheet]'
+                    $categorywhere
+                    AND  DATE(report_billing_detail.DocDate) IN (";
+                        for ($day = 0; $day < $count; $day++) {
+
                         $query .= " '$date[$day]' ,";
 
-                      }
-                      $query = rtrim($query, ' ,'); 
-    $query .= "  )
-                  AND report_billing_detail.Site = '$HptCode'
-                  AND department.HptCode = '$HptCode' 
-                  GROUP BY  department.DepCode 
-                  ORDER BY department.DepName ASC  ";
-  $meQuery = mysqli_query($conn, $query);
-  while ($Result = mysqli_fetch_assoc($meQuery))
-  {
-    if ($status_group == 1)
-    {
-      $objPHPExcel->getActiveSheet()->setCellValue('A9', $Result["GroupName"]);
-    }
-    $i++;
-    $DepName[] =  $Result["DepName"];
-    $DepCode[] =  $Result["DepCode"];
-    $isActive[] =  $Result["IsActive"];
-
-  }
-  
-  $r = 3;
-  $d = 1;
-  $rows = 9;
-  for ($row = 0; $row < $count; $row++) 
-  {
-    $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . '8', 'นน.(Kg)');
-    $r++;
-    $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . '8', 'มูล่ค่า(บาท)');
-    $r++;
-  }
-
-  $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . '8', 'นน.(Kg)');
-  $r++;
-  $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . '8', 'มูล่ค่า(บาท)');
-  $r++;
-  // -----------------------------------------------------------------------------------
-  $r = 3;
-  $j = 4;
-  $d = 1;
-
-  // นำวันที่ใส่ช่อง Excel
-  for ($row = 0; $row < $count; $row++) 
-  {
-    $objPHPExcel->getActiveSheet()->mergeCells($date_cell1[$r] . '7:' . $date_cell1[$j] . '7');
-    $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . '7', $DateShow[$row]);
-    $r += 2;
-    $j += 2;
-    $d++;
-  }
-  // นำหัวตารางใส่ช่อง Excel
-  $objPHPExcel->getActiveSheet()->mergeCells($date_cell1[$r] . '7:' . $date_cell1[$j] . '7');
-  $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . '7', "total");
-  // -----------------------------------------------------------------------------------
-  $start_row = 9;
-  $r = 1;
-  $j = 3;
-  $lek = 0;
-
-  // loop ตามแผนกที่ select เจอ
-  $COUNT_DEP = SIZEOF($DepCode);
-  for ($q = 0; $q < $COUNT_DEP; $q++) 
-  {
-    $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . $start_row, $DepName[$lek]);
-    $r++;
-    if($isActive[$lek] == "1.00"){
-      $isActive[$lek] = 'active';
-    }else if ($isActive[$lek] == "0"){
-      $isActive[$lek]= 'inactive';
-    }
-
-    // echo "<pre>";
-    // echo $isActive[$lek];
-    // echo "/<pre>";
-    $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . $start_row, $isActive[$lek]);
-    $r++;
-    $cnt = 0;
-
-    // ทำค่าให้เป็น 0 ตามวันที่
-    for ($dayx = 0; $dayx < $count; $dayx++)
-    {
-      $aWeight[$dayx] = 0;
-      $aPrice[$dayx] = 0;
-      $Date_chk[$dayx] = 0;
-    }
-
-    // กรณีเลือกทุกหมวดหมู่
-    if ($categoryCodeCome == '0') 
-    {
-      $data = "SELECT 
-                COALESCE ( SUM( report_billing.Totalw ), '0' ) AS aWeight,
-                COALESCE ( SUM( report_billing.Totalp ), '0' ) AS aPrice,
-                DATE( report_billing.DocDate ) AS Date_chk 
-              FROM
-                report_billing
-                INNER JOIN department ON department.DepCode = report_billing.DepCode 
-              WHERE  DATE( report_billing.DocDate )  IN ( ";
-              for ($day = 0; $day < $count; $day++) {
-
-                $data .= " '$date[$day]' ,";
-
-              }
-              $data = rtrim($data, ' ,'); 
-      $data .= " ) 
-              AND report_billing.DepCode = '$DepCode[$lek]'
-              AND report_billing.Site = '$HptCode' 
-              AND department.HptCode = '$HptCode' 
-              GROUP BY  DATE(report_billing.DocDate) ";
-    }
-
-    // เลือกแยกทีละหมวดหมู่
-    else
-    {
-      $data = "SELECT 
-                COALESCE ( SUM( report_billing_detail.Totalw ), '0' ) AS aWeight,
-                COALESCE ( SUM( report_billing_detail.Totalp ), '0' ) AS aPrice,
-                DATE( report_billing_detail.DocDate ) AS Date_chk 
-              FROM
-              report_billing_detail
-                INNER JOIN department ON department.DepCode = report_billing_detail.DepCode 
-              WHERE  DATE( report_billing_detail.DocDate )  IN ( ";
-              for ($day = 0; $day < $count; $day++) {
-
-                $data .= " '$date[$day]' ,";
-
-              }
-              $data = rtrim($data, ' ,'); 
-      $data .= " ) 
-              AND report_billing_detail.DepCode = '$DepCode[$lek]'
-              AND report_billing_detail.Site = '$HptCode' 
-              AND department.HptCode = '$HptCode' 
-              $categorywhere
-              GROUP BY  DATE(report_billing_detail.DocDate) ";
-
-    }
-
-
-      $meQuery = mysqli_query($conn, $data);
-      while ($Result = mysqli_fetch_assoc($meQuery)) 
-      {
-          $aWeight[$cnt] =  $Result["aWeight"];
-          $aPrice[$cnt] =  $Result["aPrice"];
-          $Date_chk[$cnt] =  $Result["Date_chk"];
-          $cnt++;
-      }
-
-      $sumdayweight = 0;
-      $sumdayprice = 0;
-      $x = 0;
-
-      // loop เช็ควันที่
-      foreach(  $date as $key => $val ) 
-      {
-          if($Date_chk[$x]  == $val)
-          {
-            $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . $start_row, $aWeight[$x]);
-            $r++;
-            $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . $start_row, $aPrice[$x]) ;
-            $r++;
-            $sumdayweight += $aWeight[$x];
-            $sumdayprice +=  $aPrice[$x];
-            $x++;
-          }
-          else
-          {
-            $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . $start_row, 0);
-            $r++;
-            $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . $start_row, 0);
-            $r++;
-          }
-      }
-
-    $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . $start_row, $sumdayweight);
-    $r++;
-    $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . $start_row, $sumdayprice);
-    $sumdayweight = 0;
-    $sumdayprice = 0;
-    $r = 1;
-    $start_row++;
-    $lek++;
-  }
-
-
-  // ผลรวมแถบข้างล่างสุด
-  $r = 2;
-  $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . $start_row, 'total');
-  $r++;
-  $sumdayweight = 0;
-  $sumdayprice = 0;
-  $cnt = 0;
-
-  // ทำค่าให้เป็น 0 ตามวันที่
-  for ($dayx = 0; $dayx < $count; $dayx++)
-  {
-    $aWeight[$dayx] = 0;
-    $aPrice[$dayx] = 0;
-    $Date_chk[$dayx] = 0;
-  }
-
-  // กรณีเลือกทุกหมวดหมู่
-  if ($categoryCodeCome == '0') 
-  {
-      $data =       "SELECT 
-                      COALESCE ( SUM( report_billing.Totalw ), '0' ) AS aWeight,
-                      COALESCE ( SUM( report_billing.Totalp ), '0' ) AS aPrice,
-                      DATE( report_billing.DocDate ) AS Date_chk 
-                    FROM
-                      report_billing
-                      INNER JOIN department ON department.DepCode = report_billing.DepCode 
-                    WHERE DATE(report_billing.DocDate) IN (  "; 
-                         for ($day = 0; $day < $count; $day++) {
-
-                          $data .=  " '$date[$day]' , ";
-
                         }
-                        $data = rtrim($data, ' ,'); 
-      $data .=       " )
-                      AND report_billing.Site = '$HptCode'
-                      AND department.HptCode = '$HptCode' 
-                      AND report_billing.Groupcode = '$GroupCode[$sheet]'
-                      GROUP BY DATE(report_billing.DocDate) ";
+                        $query = rtrim($query, ' ,'); 
+            $query .= "  )
+                    AND report_billing_detail.Site = '$HptCode'
+                    AND department.HptCode = '$HptCode' 
+                    GROUP BY  department.DepCode 
+                    ORDER BY department.DepName ASC  ";
+            $meQuery = mysqli_query($conn, $query);
+            while ($Result = mysqli_fetch_assoc($meQuery))
+            {
+              if ($status_group == 1)
+              {
+                $objPHPExcel->getActiveSheet()->setCellValue('A9', $Result["GroupName"]);
+              }
+              $i++;
+              $DepName[] =  $Result["DepName"];
+              $DepCode[] =  $Result["DepCode"];
+              $isActive[] =  $Result["IsActive"];
+          
+            }
 
-                        
-      $meQuery = mysqli_query($conn, $data);
-      while ($Result = mysqli_fetch_assoc($meQuery)) {
-        // $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . $start_row, $Result["aWeight"]);
-        // $r++;
-        // $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . $start_row, $Result["aPrice"]);
-        // $r++;
-        // $sumdayweight += $Result["aWeight"];
-        // $sumdayprice += $Result["aPrice"];
-                              $aWeight[$cnt] =  $Result["aWeight"];
-                              $aPrice[$cnt] =  $Result["aPrice"];
-                              $Date_chk[$cnt] =  $Result["Date_chk"];
-                              $cnt++;
-      }
-      $x = 0;
-      foreach(  $date as $key => $val ) 
-      {
-  
-          if($Date_chk[$x]  == $val)
-          {
-            $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . $start_row, $aWeight[$x]);
+            $r = 3;
+            $d = 1;
+            $rows = 9;
+            for ($row = 0; $row < $count; $row++) 
+            {
+              $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . '8', 'นน.(Kg)');
+              $r++;
+              $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . '8', 'มูล่ค่า(บาท)');
+              $r++;
+            }
+          
+            $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . '8', 'นน.(Kg)');
             $r++;
-            $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . $start_row, $aPrice[$x]) ;
+            $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . '8', 'มูล่ค่า(บาท)');
             $r++;
-            $sumdayweight += $aWeight[$x];
-            $sumdayprice +=  $aPrice[$x];
-            $x++;
-          }
-          else
-          {
-            $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . $start_row, 0);
-            $r++;
-            $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . $start_row, 0);
-            $r++;
-          }
-      }
-    
-  }
+            // -----------------------------------------------------------------------------------
+            $r = 3;
+            $j = 4;
+            $d = 1;
 
-  // เลือกแยกทีละหมวดหมู่
-  else
-  {
-    $data = "SELECT 
-              COALESCE ( SUM( report_billing_detail.Totalw ), '0' ) AS aWeight,
-              COALESCE ( SUM( report_billing_detail.Totalp ), '0' ) AS aPrice,
-              DATE( report_billing_detail.DocDate ) AS Date_chk 
-            FROM
-            report_billing_detail
-              INNER JOIN department ON department.DepCode = report_billing_detail.DepCode 
-            WHERE  DATE( report_billing_detail.DocDate )  IN ( ";
-            for ($day = 0; $day < $count; $day++) {
 
-              $data .= " '$date[$day]' ,";
+              // นำวันที่ใส่ช่อง Excel
+            for ($row = 0; $row < $count; $row++) 
+            {
+                $objPHPExcel->getActiveSheet()->mergeCells($date_cell1[$r] . '7:' . $date_cell1[$j] . '7');
+                $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . '7', $DateShow[$row]);
+                $r += 2;
+                $j += 2;
+                $d++;
+            }
+            // นำหัวตารางใส่ช่อง Excel
+            $objPHPExcel->getActiveSheet()->mergeCells($date_cell1[$r] . '7:' . $date_cell1[$j] . '7');
+            $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . '7', "total");
+            // -----------------------------------------------------------------------------------
+
+            $start_row = 9;
+            $r = 1;
+            $j = 3;
+            $lek = 0;
+          
+            // loop ตามแผนกที่ select เจอ
+            $COUNT_DEP = SIZEOF($DepCode);
+
+            for ($q = 0; $q < $COUNT_DEP; $q++) 
+            {
+              $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . $start_row, $DepName[$lek]);
+              $r++;
+              if($isActive[$lek] == "1.00"){
+                $isActive[$lek] = 'active';
+              }else if ($isActive[$lek] == "0"){
+                $isActive[$lek]= 'inactive';
+              }
+
+
+                $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . $start_row, $isActive[$lek]);
+                $r++;
+                $cnt = 0;
+          
+                // ทำค่าให้เป็น 0 ตามวันที่
+                for ($dayx = 0; $dayx < $count; $dayx++)
+                {
+                    $aWeight[$dayx] = 0;
+                    $aPrice[$dayx] = 0;
+                    $Date_chk[$dayx] = 0;
+                }
+
+                // กรณีเลือกทุกหมวดหมู่
+                if ($categoryCodeCome == '0') 
+                {
+                        $data = "SELECT 
+                                    COALESCE ( SUM( report_billing.Totalw ), '0' ) AS aWeight,
+                                    COALESCE ( SUM( report_billing.Totalp ), '0' ) AS aPrice,
+                                    DATE( report_billing.DocDate ) AS Date_chk 
+                                FROM
+                                    report_billing
+                                    INNER JOIN department ON department.DepCode = report_billing.DepCode 
+                                WHERE  DATE( report_billing.DocDate )  IN ( ";
+                                for ($day = 0; $day < $count; $day++) {
+
+                                    $data .= " '$date[$day]' ,";
+
+                                }
+                                $data = rtrim($data, ' ,'); 
+                        $data .= " ) 
+                                AND report_billing.DepCode = '$DepCode[$lek]'
+                                AND report_billing.Site = '$HptCode' 
+                                AND department.HptCode = '$HptCode' 
+                                GROUP BY  DATE(report_billing.DocDate) ";
+                }
+
+                // เลือกแยกทีละหมวดหมู่
+                else
+                {
+                        $data = "SELECT 
+                                    COALESCE ( SUM( report_billing_detail.Totalw ), '0' ) AS aWeight,
+                                    COALESCE ( SUM( report_billing_detail.Totalp ), '0' ) AS aPrice,
+                                    DATE( report_billing_detail.DocDate ) AS Date_chk 
+                                FROM
+                                report_billing_detail
+                                    INNER JOIN department ON department.DepCode = report_billing_detail.DepCode 
+                                WHERE  DATE( report_billing_detail.DocDate )  IN ( ";
+                                for ($day = 0; $day < $count; $day++) {
+
+                                    $data .= " '$date[$day]' ,";
+
+                                }
+                                $data = rtrim($data, ' ,'); 
+                        $data .= " ) 
+                                AND report_billing_detail.DepCode = '$DepCode[$lek]'
+                                AND report_billing_detail.Site = '$HptCode' 
+                                AND department.HptCode = '$HptCode' 
+                                $categorywhere
+                                GROUP BY  DATE(report_billing_detail.DocDate) ";
+
+                }
+
+                $meQuery = mysqli_query($conn, $data);
+                while ($Result = mysqli_fetch_assoc($meQuery)) 
+                {
+                    $aWeight[$cnt] =  $Result["aWeight"];
+                    $aPrice[$cnt] =  $Result["aPrice"];
+                    $Date_chk[$cnt] =  $Result["Date_chk"];
+                    $cnt++;
+                }
+
+                $sumdayweight = 0;
+                $sumdayprice = 0;
+                $x = 0;
+
+
+                // loop เช็ควันที่
+                foreach(  $date as $key => $val ) 
+                {
+                    if($Date_chk[$x]  == $val)
+                    {
+                      $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . $start_row, $aWeight[$x]);
+                      $r++;
+                      $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . $start_row, $aPrice[$x]) ;
+                      $r++;
+                      $sumdayweight += $aWeight[$x];
+                      $sumdayprice +=  $aPrice[$x];
+                      $x++;
+                    }
+                    else
+                    {
+                      $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . $start_row, 0);
+                      $r++;
+                      $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . $start_row, 0);
+                      $r++;
+                    }
+                }
+          
+              $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . $start_row, $sumdayweight);
+              $r++;
+              $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . $start_row, $sumdayprice);
+              $sumdayweight = 0;
+              $sumdayprice = 0;
+              $r = 1;
+              $start_row++;
+              $lek++;
+          
+
 
             }
-            $data = rtrim($data, ' ,'); 
-          $data .= " ) 
-            AND report_billing_detail.Groupcode = '$GroupCode[$sheet]'
-            AND report_billing_detail.Site = '$HptCode' 
-            AND department.HptCode = '$HptCode' 
-            $categorywhere
-            GROUP BY  DATE(report_billing_detail.DocDate) ";
 
-                            $meQuery = mysqli_query($conn, $data);
-                            while ($Result = mysqli_fetch_assoc($meQuery)) {
-                        
-                              $aWeight[$cnt] =  $Result["aWeight"];
-                              $aPrice[$cnt] =  $Result["aPrice"];
-                              $Date_chk[$cnt] =  $Result["Date_chk"];
-                              $cnt++;
-                        
+
+
+              // ผลรวมแถบข้างล่างสุด
+                $r = 2;
+                $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . $start_row, 'total');
+                $r++;
+                $sumdayweight = 0;
+                $sumdayprice = 0;
+                $cnt = 0;
+
+                // ทำค่าให้เป็น 0 ตามวันที่
+                for ($dayx = 0; $dayx < $count; $dayx++)
+                {
+                    $aWeight[$dayx] = 0;
+                    $aPrice[$dayx] = 0;
+                    $Date_chk[$dayx] = 0;
+                }
+
+                // กรณีเลือกทุกหมวดหมู่
+                if ($categoryCodeCome == '0') 
+                {
+                    $data =       "SELECT 
+                                    COALESCE ( SUM( report_billing.Totalw ), '0' ) AS aWeight,
+                                    COALESCE ( SUM( report_billing.Totalp ), '0' ) AS aPrice,
+                                    DATE( report_billing.DocDate ) AS Date_chk 
+                                    FROM
+                                    report_billing
+                                    INNER JOIN department ON department.DepCode = report_billing.DepCode 
+                                    WHERE DATE(report_billing.DocDate) IN (  "; 
+                                        for ($day = 0; $day < $count; $day++) {
+
+                                        $data .=  " '$date[$day]' , ";
+
+                                        }
+                                        $data = rtrim($data, ' ,'); 
+                    $data .=       " )
+                                    AND report_billing.Site = '$HptCode'
+                                    AND department.HptCode = '$HptCode' 
+                                    AND report_billing.Groupcode = '$GroupCode[$sheet]'
+                                    GROUP BY DATE(report_billing.DocDate) ";
+
+                                        
+                    $meQuery = mysqli_query($conn, $data);
+                    while ($Result = mysqli_fetch_assoc($meQuery)) {
+                        // $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . $start_row, $Result["aWeight"]);
+                        // $r++;
+                        // $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . $start_row, $Result["aPrice"]);
+                        // $r++;
+                        // $sumdayweight += $Result["aWeight"];
+                        // $sumdayprice += $Result["aPrice"];
+                                            $aWeight[$cnt] =  $Result["aWeight"];
+                                            $aPrice[$cnt] =  $Result["aPrice"];
+                                            $Date_chk[$cnt] =  $Result["Date_chk"];
+                                            $cnt++;
+                    }
+                    $x = 0;
+                    foreach(  $date as $key => $val ) 
+                    {
+                
+                        if($Date_chk[$x]  == $val)
+                        {
+                            $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . $start_row, $aWeight[$x]);
+                            $r++;
+                            $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . $start_row, $aPrice[$x]) ;
+                            $r++;
+                            $sumdayweight += $aWeight[$x];
+                            $sumdayprice +=  $aPrice[$x];
+                            $x++;
+                        }
+                        else
+                        {
+                            $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . $start_row, 0);
+                            $r++;
+                            $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . $start_row, 0);
+                            $r++;
+                        }
+                    }
+                    
+                }
+
+                // เลือกแยกทีละหมวดหมู่
+                else
+                {
+                    $data = "SELECT 
+                            COALESCE ( SUM( report_billing_detail.Totalw ), '0' ) AS aWeight,
+                            COALESCE ( SUM( report_billing_detail.Totalp ), '0' ) AS aPrice,
+                            DATE( report_billing_detail.DocDate ) AS Date_chk 
+                            FROM
+                            report_billing_detail
+                            INNER JOIN department ON department.DepCode = report_billing_detail.DepCode 
+                            WHERE  DATE( report_billing_detail.DocDate )  IN ( ";
+                            for ($day = 0; $day < $count; $day++) {
+
+                            $data .= " '$date[$day]' ,";
+
                             }
-                            $x = 0;
-                        
-                            foreach(  $date as $key => $val ) 
-                            {
-                        
-                                if($Date_chk[$x]  == $val)
-                                {
-                                  $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . $start_row, $aWeight[$x]);
-                                  $r++;
-                                  $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . $start_row, $aPrice[$x]) ;
-                                  $r++;
-                                  $sumdayweight += $aWeight[$x];
-                                  $sumdayprice +=  $aPrice[$x];
-                                  $x++;
-                                }
-                                else
-                                {
-                                  $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . $start_row, 0);
-                                  $r++;
-                                  $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . $start_row, 0);
-                                  $r++;
-                                }
-                            }
-  }
-  $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . $start_row, $sumdayweight);
-  $r++;
-  $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . $start_row, $sumdayprice);
+                            $data = rtrim($data, ' ,'); 
+                        $data .= " ) 
+                            AND report_billing_detail.Groupcode = '$GroupCode[$sheet]'
+                            AND report_billing_detail.Site = '$HptCode' 
+                            AND department.HptCode = '$HptCode' 
+                            $categorywhere
+                            GROUP BY  DATE(report_billing_detail.DocDate) ";
 
-  $A5 = array(
-    'alignment' => array(
-      'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
-    ),
-    'font'  => array(
-      'bold'  => true,
-      // 'color' => array('rgb' => 'FF0000'),
-      'size'  => 20,
-      'name'  => 'THSarabun'
-    )
-  );
-  $fill = array(
-    'alignment' => array(
-      'vertical' => PHPExcel_Style_Alignment::VERTICAL_CENTER,
-      'horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
-    ),
-    'font'  => array(
-      'size'  => 8,
-      'name'  => 'THSarabun'
-    )
-  );
-  $styleArray = array(
+                                            $meQuery = mysqli_query($conn, $data);
+                                            while ($Result = mysqli_fetch_assoc($meQuery)) {
+                                        
+                                            $aWeight[$cnt] =  $Result["aWeight"];
+                                            $aPrice[$cnt] =  $Result["aPrice"];
+                                            $Date_chk[$cnt] =  $Result["Date_chk"];
+                                            $cnt++;
+                                        
+                                            }
+                                            $x = 0;
+                                        
+                                            foreach(  $date as $key => $val ) 
+                                            {
+                                        
+                                                if($Date_chk[$x]  == $val)
+                                                {
+                                                $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . $start_row, $aWeight[$x]);
+                                                $r++;
+                                                $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . $start_row, $aPrice[$x]) ;
+                                                $r++;
+                                                $sumdayweight += $aWeight[$x];
+                                                $sumdayprice +=  $aPrice[$x];
+                                                $x++;
+                                                }
+                                                else
+                                                {
+                                                $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . $start_row, 0);
+                                                $r++;
+                                                $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . $start_row, 0);
+                                                $r++;
+                                                }
+                                            }
+                }
 
-    'borders' => array(
 
-      'allborders' => array(
+                $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . $start_row, $sumdayweight);
+                $r++;
+                $objPHPExcel->getActiveSheet()->setCellValue($date_cell1[$r] . $start_row, $sumdayprice);
 
-        'style' => PHPExcel_Style_Border::BORDER_THIN
-      )
-    )
-  );
-  $colorfill = array(
-    'fill' => array(
-      'type' => PHPExcel_Style_Fill::FILL_SOLID,
-      'color' => array('rgb' => 'B9E3E6')
-    )
-  );
-  $r1 = $r - 1;
-  $objPHPExcel->getActiveSheet()->getStyle("A4:A6")->applyFromArray($A5);
-  $objPHPExcel->getActiveSheet()->getStyle("A7:" . $date_cell1[$r] . $start_row)->applyFromArray($styleArray);
-  $objPHPExcel->getActiveSheet()->getStyle("A7:" . $date_cell1[$r] . $start_row)->applyFromArray($fill);
-  $objPHPExcel->getActiveSheet()->getStyle("A7:" . $date_cell1[$r] . "8")->applyFromArray($colorfill);
-  $objPHPExcel->getActiveSheet()->getStyle("A" . $start_row . ":" . $date_cell1[$r] . $start_row)->applyFromArray($colorfill);
-  $objPHPExcel->getActiveSheet()->getStyle($date_cell1[$r1] . "9:" . $date_cell1[$r] . $start_row)->applyFromArray($colorfill);
-  $objPHPExcel->getActiveSheet()->getStyle("C9:" . $date_cell1[$r] . $start_row)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
-  $objPHPExcel->getActiveSheet()->getStyle('A1:' . $date_cell1[$r] . $start_row)->getAlignment()->setIndent(1);
-  // $objPHPExcel->getActiveSheet()->getColumnDimension("A:D")->setAutoSize(true);
-  foreach (range('A', 'B') as $columnID) {
-    $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
-      ->setAutoSize(true);
-  }
-  $objDrawing = new PHPExcel_Worksheet_Drawing();
-  $objDrawing->setName('Nhealth_linen');
-  $objDrawing->setDescription('Nhealth_linen');
-  $objDrawing->setPath('Nhealth_linen 4.0.png');
-  $objDrawing->setCoordinates('A1');
-  //setOffsetX works properly
-  $objDrawing->setOffsetX(0);
-  $objDrawing->setOffsetY(0);
-  //set width, height
-  $objDrawing->setWidthAndHeight(150, 75);
-  $objDrawing->setResizeProportional(true);
-  $objDrawing->setWorksheet($objPHPExcel->getActiveSheet());
 
-  // Rename worksheet
-  $objPHPExcel->getActiveSheet()->setTitle($GroupName[$sheet]);
-  $objPHPExcel->createSheet();
-  $DepCode = [];
-  $DepName = [];
-  $sumdayweight = 0;
-  $sumdayprice = 0;
+  
+
+
+
+
+            
+            $A5 = array(
+              'alignment' => array(
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+              ),
+
+              'font'  => array(
+                'bold'  => true,
+                'size'  => 20,
+                'name'  => 'THSarabun'
+              )
+            );
+
+            $A7 = array(
+              'alignment' => array(
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+              ),
+
+              'font'  => array(
+                'bold'  => true,
+                'size'  => 10,
+                'name'  => 'THSarabun'
+              )
+            );
+
+            $fill = array(
+              'alignment' => array(
+                'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_BOTTOM,
+                'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+              ),
+              'font'  => array(
+                'size'  => 8,
+                'name'  => 'THSarabun'
+              )
+            );
+
+
+            $styleArray = array(
+
+              'borders' => array(
+
+                'allBorders' => array(
+
+                  'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                  'color' => array('argb' => '010203'),
+                )
+              )
+            );
+
+
+
+            $colorfill = array(
+              'fill' => array(
+                'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                'startColor' => array('rgb' => 'B9E3E6')
+              )
+            );
+            
+            $r1 = $r - 1;
+            $objPHPExcel->getActiveSheet()->getStyle("A4:A6")->applyFromArray($A5);
+            $objPHPExcel->getActiveSheet()->getStyle("A7:" . $date_cell1[$r] . $start_row)->applyFromArray($styleArray);
+            $objPHPExcel->getActiveSheet()->getStyle("A7:" . $date_cell1[$r] . $start_row)->applyFromArray($fill);
+            $objPHPExcel->getActiveSheet()->getStyle("A7:" . $date_cell1[$r] . "8")->applyFromArray($colorfill);
+            $objPHPExcel->getActiveSheet()->getStyle("A" . $start_row . ":" . $date_cell1[$r] . $start_row)->applyFromArray($colorfill);
+            $objPHPExcel->getActiveSheet()->getStyle($date_cell1[$r1] . "9:" . $date_cell1[$r] . $start_row)->applyFromArray($colorfill);
+            $objPHPExcel->getActiveSheet()->getStyle("C9:" . $date_cell1[$r] . $start_row)->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+            $objPHPExcel->getActiveSheet()->getStyle('A1:' . $date_cell1[$r] . $start_row)->getAlignment()->setIndent(1);
+            // $objPHPExcel->getActiveSheet()->getColumnDimension("A:D")->setAutoSize(true);
+            foreach (range('A', 'B') as $columnID) {
+              $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)
+                ->setAutoSize(true);
+            }
+
+
+
+            $objPHPExcel->getActiveSheet()->setTitle($GroupName[$sheet]);
+            $objPHPExcel->createSheet();
+            $DepCode = [];
+            $DepName = [];
+            $sumdayweight = 0;
+            $sumdayprice = 0;
+            $deletesheet++;
 }
-//ตั้งชื่อไฟล์
+$objPHPExcel->setActiveSheetIndex(0);
+$objPHPExcel->removeSheetByIndex($deletesheet);
+
+
+
+
+
+
+
+
+$writer = new Xlsx($objPHPExcel);
+
+// ชื่อไฟล์
 $time  = date("H:i:s");
 $date  = date("Y-m-d");
 list($h, $i, $s) = explode(":", $time);
-$file_name = "Report_Billing_category_xls_" . $date . "_" . $h . "_" . $i . "_" . $s . ")";
-//
-$objPHPExcel->removeSheetByIndex(
-  $objPHPExcel->getIndex(
-    $objPHPExcel->getSheetByName('Worksheet')
-  )
-);
-// Save Excel 2007 file
-#echo date('H:i:s') . " Write to Excel2007 format\n";
-$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-ob_end_clean();
-// We'll be outputting an excel file
-header('Content-type: application/vnd.ms-excel');
-// It will be called file.xls
-header('Content-Disposition: attachment;filename="' . $file_name . '.xlsx"');
-$objWriter->save('php://output');
+$file_export = "Report_Billing_category_xls_" . $date . "_" . $h . "_" . $i . "_" . $s . ")";
+
+
+header('Content-Type: application/vnd.openxmlformats-officedocument.objPHPExcelml.sheet');
+header('Content-Disposition: attachment;filename="' . $file_export . '.xlsx"');
+header("Content-Transfer-Encoding: binary ");
+
+$writer->save('php://output');
 exit();

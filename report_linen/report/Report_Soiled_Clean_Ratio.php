@@ -113,12 +113,13 @@ $datetime = new DatetimeTH();
 // Using Coding
 $pdf->AddPage("P", "A4");
 if ($language == 'th') {
-  $HptName = HptNameTH;
-  $FacName = FacNameTH;
+  $HptName = 'HptNameTH';
+  $FacName = 'FacNameTH';
 } else {
-  $HptName = HptName;
-  $FacName = FacName;
+  $HptName = 'HptName';
+  $FacName = 'FacName';
 }
+$size = 12;
 //query 
 $Sql = "SELECT
         factory.$FacName,
@@ -183,9 +184,17 @@ if ($language == 'th') {
 $pdf->SetFont('THSarabun', 'b', $size);
 $pdf->Cell($w[3], 10, iconv("UTF-8", "TIS-620", $array2['receive_newlinen'][$language]), 1, 0, 'C');
 $pdf->Cell($w[4], 10, iconv("UTF-8", "TIS-620", $array2['Totalclean'][$language]), 1, 1, 'C');
-
+$totalsum1 = 0;
+$totalsum2 = 0;
+$totalsum3 = 0;
+$totalsum4 = 0;
+$totalsum5 = 0;
+$totalsum6 = 0;
+$totalsum7 = 0;
+$totalsum8 = 0;
 //data
 if ($chk == 'one') {
+
   if ($format == 1) { // 1วัน
     $date = $date1;
     $count = count($date);
@@ -252,7 +261,7 @@ if ($chk == 'one') {
     WHERE DATE (clean.Docdate) = '$date'
     AND clean.FacCode = '$FacCode' AND site.HptCode= '$HptCode'AND clean.IsStatus  <> 9 )
     f";
-    
+
       $meQuery = mysqli_query($conn, $query);
       while ($Result = mysqli_fetch_assoc($meQuery)) {
         $docdate = $Result['DocDate'];
@@ -463,18 +472,18 @@ if ($chk == 'one') {
     $pdf->Cell(100, 10, iconv("UTF-8", "TIS-620",  number_format(abs($scr), 2) . '%'), 1, 1, 'C');
   }
 } elseif ($chk == 'between') {
-  $begin = new DateTime( $date1 );
-  $end = new DateTime( $date2 );
-  $end = $end->modify( '1 day' );
+  $begin = new DateTime($date1);
+  $end = new DateTime($date2);
+  $end = $end->modify('1 day');
 
   $interval = new DateInterval('P1D');
-  $period = new DatePeriod($begin, $interval ,$end);
+  $period = new DatePeriod($begin, $interval, $end);
   foreach ($period as $key => $value) {
     $date[] = $value->format('Y-m-d');
     $dateshow[] = $value->format('d-m-Y');
   }
   $count = sizeof($date);
-  
+
   for ($i = 0; $i < $count; $i++) {
     $query = "SELECT 
     DIRTY,
@@ -540,7 +549,7 @@ if ($chk == 'one') {
     AND clean.IsStatus  <> 9)
     f";
 
-   
+
     $meQuery = mysqli_query($conn, $query);
     while ($Result = mysqli_fetch_assoc($meQuery)) {
       $docdate = $Result['DocDate'];
@@ -602,16 +611,25 @@ if ($chk == 'one') {
   $pdf->Cell(100, 10, iconv("UTF-8", "TIS-620",  number_format(abs($scr), 2) . '%'), 1, 1, 'C');
 } elseif ($chk == 'month') {
   // 1เดือน
+
   $day = 1;
   $count = cal_days_in_month(CAL_GREGORIAN, $date1, $year1);
   $datequery =  $year1 . '-' . $date1 . '-';
   $dateshow = '-' . $date1 . '-' . $year1;
+
+
+
   for ($i = 0; $i < $count; $i++) {
     $date[] = $datequery . $day;
     $DateShow[] = $day . $dateshow;
     $day++;
   }
+  $date[30] = "";
+  $DateShow[30] = "";
+  $date[31] = "";
+  $DateShow[31] = "";
   for ($i = 0; $i <= $count; $i++) {
+
     $query = "SELECT 
    DIRTY,
    repair_wash,
@@ -631,8 +649,7 @@ if ($chk == 'one') {
   COALESCE(dirty.DocDate,0) AS DocDate
   FROM
   dirty
-  WHERE DATE (dirty.Docdate) = '$date[$i]' AND dirty.faccode= '$FacCode' AND dirty.HptCode= '$HptCode'
-  AND dirty.isstatus <> 9
+  WHERE dirty.isstatus <> 9
   )a,
   (SELECT  COALESCE(sum(repair_wash.Total),'0') AS repair_wash,
   COALESCE(repair_wash.DocDate,0) AS DocDate
@@ -640,7 +657,7 @@ if ($chk == 'one') {
    
   WHERE DATE (repair_wash.Docdate) = '$date[$i]' AND repair_wash.HptCode= '$HptCode'
   AND repair_wash.FacCode = '$FacCode'
-  AND repair_wash.isStatus<>9
+  AND repair_wash.isStatus <> 9
   )b,
   (SELECT COALESCE(SUM(newlinentable.Total),'0') AS NEWLINEN ,
   COALESCE(newlinentable.DocDate,0) AS DocDate
@@ -673,8 +690,14 @@ if ($chk == 'one') {
   WHERE DATE (clean.Docdate) = '$date[$i]'
   AND clean.FacCode = '$FacCode' AND site.HptCode= '$HptCode'
   AND clean.IsStatus  <> 9)
-  f";
-   
+  f ";
+
+
+
+    // echo "<pre>";
+    // echo $query;
+    // echo "</pre>";
+
     $meQuery = mysqli_query($conn, $query);
     while ($Result = mysqli_fetch_assoc($meQuery)) {
       $docdate = $Result['DocDate'];
@@ -687,16 +710,18 @@ if ($chk == 'one') {
       $total1 = 0;
       $total2 = 0;
       $r = 0;
-      if (
-        $dirty <> 0 ||  $repair_wash <> 0 || $newlinen <> 0 || $clean <> 0 ||  $clean_repair_wash <> 0 ||  $clean_newlinen <> 0
-      ) {
-        list($day, $month, $year) = explode('-', $DateShow[$i]);
-        if ($language == 'th') {
-          $year = $year + 543;
-          $datesh = $day . "-" . $month . "-" . $year;
-        } else {
-          $datesh = $day . "-" . $month . "-" . $year;
+      if ($dirty <> 0 ||  $repair_wash <> 0 || $newlinen <> 0 || $clean <> 0 ||  $clean_repair_wash <> 0 ||  $clean_newlinen <> 0) {
+        $datesh =  "";
+        if($DateShow[$i] != ""){
+          list($day, $month, $year) = explode('-', $DateShow[$i]);
+          if ($language == 'th') {
+            $year = $year + 543;
+            $datesh = $day . "-" . $month . "-" . $year;
+          } else {
+            $datesh = $day . "-" . $month . "-" . $year;
+          }
         }
+
         $pdf->SetFont('THSarabun', '', 14);
         $total1 = $dirty + $repair_wash + $newlinen;
         $total2 = $clean + $clean_repair_wash + $clean_newlinen;
@@ -755,129 +780,128 @@ if ($chk == 'one') {
   $count = sizeof($date);
   for ($i = 0; $i < $count; $i++) {
     $query = "SELECT 
-   DIRTY,
-  repair_wash,
-   NEWLINEN,
-   CLEAN,
-   CLEAN_repair_wash,
-   CLEAN_NEWLINEN,
-  a.DocDate,
-  b.DocDate,
-  c.DocDate,
-  d.DocDate,
-  e.DocDate,
-  f.DocDate
-  FROM (
-  SELECT
-   COALESCE(sum(dirty.Total),'0') AS DIRTY ,
-  COALESCE(dirty.DocDate,0) AS DocDate
-  FROM
-  dirty
-  WHERE DATE (dirty.Docdate) = '$date[$i]' AND dirty.faccode= '$FacCode' AND dirty.HptCode= '$HptCode'
- AND dirty.isstatus <> 9
-  )a,
-  (SELECT  COALESCE(sum(repair_wash.Total),'0') AS repair_wash,
-  COALESCE(repair_wash.DocDate,0) AS DocDate
-  FROM  repair_wash
-   
-  WHERE DATE (repair_wash.Docdate) = '$date[$i]'
-  AND repair_wash.FacCode = '$FacCode' AND repair_wash.HptCode= '$HptCode'
-  AND repair_wash.isStatus<>9
-  )b,
-  (SELECT COALESCE(SUM(newlinentable.Total),'0') AS NEWLINEN ,
-  COALESCE(newlinentable.DocDate,0) AS DocDate
-  FROM newlinentable
-  WHERE DATE (newlinentable.Docdate) = '$date[$i]' AND newlinentable.FacCode = '$FacCode' AND newlinentable.HptCode= '$HptCode'
-  AND newlinentable.isStatus<>9
-  )c,
-  (SELECT  COALESCE(SUM(clean.Total),'0') AS CLEAN , 
-  COALESCE(clean.DocDate,0) AS DocDate
-  FROM clean
-  INNER JOIN department ON department.DepCode = clean.DepCode
-		INNER JOIN site ON department.HptCode = site.HptCode
-  WHERE DATE (clean.Docdate) = '$date[$i]' AND (clean.RefDocNo = '' OR clean.RefDocNo LIKE '%DT%')
-      AND clean.IsStatus <>9 AND site.HptCode= '$HptCode' AND clean.FacCode = '$FacCode'
-  )d,
-  (SELECT  COALESCE(SUM(return_wash.Total),'0') AS CLEAN_repair_wash,
-  COALESCE(return_wash.DocDate,0) AS DocDate
-  FROM return_wash
-  INNER JOIN department ON department.DepCode = return_wash.DepCode
-	INNER JOIN site ON department.HptCode = site.HptCode
-  WHERE DATE (return_wash.Docdate) = '$date[$i]' AND return_wash.FacCode = '$FacCode' AND site.HptCode= '$HptCode'
-  AND return_wash.IsStatus  <> 9
-  )e,
-  (SELECT  COALESCE(SUM(clean.Total),'0') AS CLEAN_NEWLINEN,
-  COALESCE(newlinentable.DocDate,0) AS DocDate
-  FROM clean
-    INNER JOIN clean_ref ON clean_ref.DocNo = clean.DocNo
-    INNER JOIN newlinentable ON clean_ref.RefDocNo = newlinentable.DocNo
-  INNER JOIN department ON department.DepCode = clean.DepCode
-		INNER JOIN site ON department.HptCode = site.HptCode
-  WHERE DATE (clean.Docdate) = '$date[$i]'
-  AND clean.FacCode = '$FacCode' AND site.HptCode= '$HptCode'
-  AND clean.IsStatus  <> 9)
-  f";
-    $meQuery = mysqli_query($conn, $query);
-    while ($Result = mysqli_fetch_assoc($meQuery)) {
-      $docdate = $Result['DocDate'];
-      $dirty = $Result['DIRTY'];
-      $repair_wash = $Result['repair_wash'];
-      $newlinen = $Result['NEWLINEN'];
-      $clean = $Result['CLEAN'];
-      $clean_repair_wash = $Result['CLEAN_repair_wash'];
-      $clean_newlinen = $Result['CLEAN_NEWLINEN'];
-      $total1 = 0;
-      $total2 = 0;
-      $r = 0;
-      if (
-        $dirty <> 0 ||  $repair_wash <> 0 || $newlinen <> 0 || $clean <> 0 ||  $clean_repair_wash <> 0 ||  $clean_newlinen <> 0
-      ) {
-        list($day, $month, $year) = explode('-', $dateshow[$i]);
-        if ($language == 'th') {
-          $year = $year + 543;
-          $datesh = $day . "-" . $month . "-" . $year;
-        } else {
-          $datesh = $day . "-" . $month . "-" . $year;
+            DIRTY,
+              repair_wash,
+            NEWLINEN,
+            CLEAN,
+            CLEAN_repair_wash,
+            CLEAN_NEWLINEN,
+              a.DocDate,
+              b.DocDate,
+              c.DocDate,
+              d.DocDate,
+              e.DocDate,
+              f.DocDate
+          FROM (
+          SELECT
+          COALESCE(sum(dirty.Total),'0') AS DIRTY ,
+          COALESCE(dirty.DocDate,0) AS DocDate
+          FROM
+          dirty
+          WHERE DATE (dirty.Docdate) = '$date[$i]' AND dirty.faccode= '$FacCode' AND dirty.HptCode= '$HptCode'
+          AND dirty.isstatus <> 9
+          )a,
+          (SELECT  COALESCE(sum(repair_wash.Total),'0') AS repair_wash,
+          COALESCE(repair_wash.DocDate,0) AS DocDate
+          FROM  repair_wash
+          
+          WHERE DATE (repair_wash.Docdate) = '$date[$i]'
+          AND repair_wash.FacCode = '$FacCode' AND repair_wash.HptCode= '$HptCode'
+          AND repair_wash.isStatus<>9
+          )b,
+          (SELECT COALESCE(SUM(newlinentable.Total),'0') AS NEWLINEN ,
+          COALESCE(newlinentable.DocDate,0) AS DocDate
+          FROM newlinentable
+          WHERE DATE (newlinentable.Docdate) = '$date[$i]' AND newlinentable.FacCode = '$FacCode' AND newlinentable.HptCode= '$HptCode'
+          AND newlinentable.isStatus<>9
+          )c,
+          (SELECT  COALESCE(SUM(clean.Total),'0') AS CLEAN , 
+          COALESCE(clean.DocDate,0) AS DocDate
+          FROM clean
+          INNER JOIN department ON department.DepCode = clean.DepCode
+            INNER JOIN site ON department.HptCode = site.HptCode
+          WHERE DATE (clean.Docdate) = '$date[$i]' AND (clean.RefDocNo = '' OR clean.RefDocNo LIKE '%DT%')
+              AND clean.IsStatus <>9 AND site.HptCode= '$HptCode' AND clean.FacCode = '$FacCode'
+          )d,
+          (SELECT  COALESCE(SUM(return_wash.Total),'0') AS CLEAN_repair_wash,
+          COALESCE(return_wash.DocDate,0) AS DocDate
+          FROM return_wash
+          INNER JOIN department ON department.DepCode = return_wash.DepCode
+          INNER JOIN site ON department.HptCode = site.HptCode
+          WHERE DATE (return_wash.Docdate) = '$date[$i]' AND return_wash.FacCode = '$FacCode' AND site.HptCode= '$HptCode'
+          AND return_wash.IsStatus  <> 9
+          )e,
+          (SELECT  COALESCE(SUM(clean.Total),'0') AS CLEAN_NEWLINEN,
+          COALESCE(newlinentable.DocDate,0) AS DocDate
+          FROM clean
+            INNER JOIN clean_ref ON clean_ref.DocNo = clean.DocNo
+            INNER JOIN newlinentable ON clean_ref.RefDocNo = newlinentable.DocNo
+          INNER JOIN department ON department.DepCode = clean.DepCode
+            INNER JOIN site ON department.HptCode = site.HptCode
+          WHERE DATE (clean.Docdate) = '$date[$i]'
+          AND clean.FacCode = '$FacCode' AND site.HptCode= '$HptCode'
+          AND clean.IsStatus  <> 9)
+          f";
+      $meQuery = mysqli_query($conn, $query);
+      while ($Result = mysqli_fetch_assoc($meQuery)) {
+        $docdate = $Result['DocDate'];
+        $dirty = $Result['DIRTY'];
+        $repair_wash = $Result['repair_wash'];
+        $newlinen = $Result['NEWLINEN'];
+        $clean = $Result['CLEAN'];
+        $clean_repair_wash = $Result['CLEAN_repair_wash'];
+        $clean_newlinen = $Result['CLEAN_NEWLINEN'];
+        $total1 = 0;
+        $total2 = 0;
+        $r = 0;
+        if ( $dirty <> 0 ||  $repair_wash <> 0 || $newlinen <> 0 || $clean <> 0 ||  $clean_repair_wash <> 0 ||  $clean_newlinen <> 0) {
+          list($day, $month, $year) = explode('-', $dateshow[$i]);
+          if ($language == 'th') {
+            $year = $year + 543;
+            $datesh = $day . "-" . $month . "-" . $year;
+          } else {
+            $datesh = $day . "-" . $month . "-" . $year;
+          }
+          $pdf->SetFont('THSarabun', '', 14);
+          $total1 = $dirty + $repair_wash + $newlinen;
+          $total2 = $clean + $clean_repair_wash + $clean_newlinen;
+          $pdf->SetFont('THSarabun', '', 14);
+          $pdf->Cell($w[1], 10, iconv("UTF-8", "TIS-620", $datesh), 1, 0, 'C');
+          $pdf->Cell($w[1], 10, iconv("UTF-8", "TIS-620", number_format($dirty, 2)), 1, 0, 'C');
+          $pdf->Cell($w[2], 10, iconv("UTF-8", "TIS-620", number_format($repair_wash, 2)), 1, 0, 'C');
+          $pdf->Cell($w[3], 10, iconv("UTF-8", "TIS-620", number_format($newlinen, 2)), 1, 0, 'C');
+          $pdf->Cell($w[4], 10, iconv("UTF-8", "TIS-620", number_format($total1, 2)), 1, 0, 'C');
+          $pdf->Cell($w[1], 10, iconv("UTF-8", "TIS-620", number_format($clean, 2)), 1, 0, 'C');
+          $pdf->Cell($w[2], 10, iconv("UTF-8", "TIS-620", number_format($clean_repair_wash, 2)), 1, 0, 'C');
+          $pdf->Cell($w[3], 10, iconv("UTF-8", "TIS-620", number_format($clean_newlinen, 2)), 1, 0, 'C');
+          $pdf->Cell($w[4], 10, iconv("UTF-8", "TIS-620", number_format($total2, 2)), 1, 0, 'C');
+          $totalsum1 += $dirty;
+          $totalsum2 += $repair_wash;
+          $totalsum3 += $newlinen;
+          $totalsum4 += $total1;
+          $totalsum5 += $clean;
+          $totalsum6 += $clean_repair_wash;
+          $totalsum7 += $clean_newlinen;
+          $totalsum8 += $total2;
+          $pdf->Ln();
         }
-        $pdf->SetFont('THSarabun', '', 14);
-        $total1 = $dirty + $repair_wash + $newlinen;
-        $total2 = $clean + $clean_repair_wash + $clean_newlinen;
-        $pdf->SetFont('THSarabun', '', 14);
-        $pdf->Cell($w[1], 10, iconv("UTF-8", "TIS-620", $datesh), 1, 0, 'C');
-        $pdf->Cell($w[1], 10, iconv("UTF-8", "TIS-620", number_format($dirty, 2)), 1, 0, 'C');
-        $pdf->Cell($w[2], 10, iconv("UTF-8", "TIS-620", number_format($repair_wash, 2)), 1, 0, 'C');
-        $pdf->Cell($w[3], 10, iconv("UTF-8", "TIS-620", number_format($newlinen, 2)), 1, 0, 'C');
-        $pdf->Cell($w[4], 10, iconv("UTF-8", "TIS-620", number_format($total1, 2)), 1, 0, 'C');
-        $pdf->Cell($w[1], 10, iconv("UTF-8", "TIS-620", number_format($clean, 2)), 1, 0, 'C');
-        $pdf->Cell($w[2], 10, iconv("UTF-8", "TIS-620", number_format($clean_repair_wash, 2)), 1, 0, 'C');
-        $pdf->Cell($w[3], 10, iconv("UTF-8", "TIS-620", number_format($clean_newlinen, 2)), 1, 0, 'C');
-        $pdf->Cell($w[4], 10, iconv("UTF-8", "TIS-620", number_format($total2, 2)), 1, 0, 'C');
-        $totalsum1 += $dirty;
-        $totalsum2 += $repair_wash;
-        $totalsum3 += $newlinen;
-        $totalsum4 += $total1;
-        $totalsum5 += $clean;
-        $totalsum6 += $clean_repair_wash;
-        $totalsum7 += $clean_newlinen;
-        $totalsum8 += $total2;
-        $pdf->Ln();
       }
     }
+      $pdf->Cell($w[1], 10, iconv("UTF-8", "TIS-620", $array2['total'][$language]), 1, 0, 'C');
+      $pdf->Cell($w[1], 10, iconv("UTF-8", "TIS-620",  number_format($totalsum1, 2)), 1, 0, 'C');
+      $pdf->Cell($w[2], 10, iconv("UTF-8", "TIS-620",  number_format($totalsum2, 2)), 1, 0, 'C');
+      $pdf->Cell($w[3], 10, iconv("UTF-8", "TIS-620",  number_format($totalsum3, 2)), 1, 0, 'C');
+      $pdf->Cell($w[4], 10, iconv("UTF-8", "TIS-620",  number_format($totalsum4, 2)), 1, 0, 'C');
+      $pdf->Cell($w[1], 10, iconv("UTF-8", "TIS-620",  number_format($totalsum5, 2)), 1, 0, 'C');
+      $pdf->Cell($w[2], 10, iconv("UTF-8", "TIS-620",  number_format($totalsum6, 2)), 1, 0, 'C');
+      $pdf->Cell($w[3], 10, iconv("UTF-8", "TIS-620",  number_format($totalsum7, 2)), 1, 0, 'C');
+      $pdf->Cell($w[4], 10, iconv("UTF-8", "TIS-620", number_format($totalsum8, 2)), 1, 1, 'C');
+      $scr = (($totalsum4 - $totalsum8) / $totalsum4) * 100;
+      $pdf->ln(7);
+      $pdf->Cell(95, 10, iconv("UTF-8", "TIS-620",  'SCR (Soiled-Clean Ratio)'), 1, 0, 'C');
+      $pdf->Cell(100, 10, iconv("UTF-8", "TIS-620",  number_format(abs($scr), 2) . '%'), 1, 1, 'C');
+  
   }
-  $pdf->Cell($w[1], 10, iconv("UTF-8", "TIS-620", $array2['total'][$language]), 1, 0, 'C');
-  $pdf->Cell($w[1], 10, iconv("UTF-8", "TIS-620",  number_format($totalsum1, 2)), 1, 0, 'C');
-  $pdf->Cell($w[2], 10, iconv("UTF-8", "TIS-620",  number_format($totalsum2, 2)), 1, 0, 'C');
-  $pdf->Cell($w[3], 10, iconv("UTF-8", "TIS-620",  number_format($totalsum3, 2)), 1, 0, 'C');
-  $pdf->Cell($w[4], 10, iconv("UTF-8", "TIS-620",  number_format($totalsum4, 2)), 1, 0, 'C');
-  $pdf->Cell($w[1], 10, iconv("UTF-8", "TIS-620",  number_format($totalsum5, 2)), 1, 0, 'C');
-  $pdf->Cell($w[2], 10, iconv("UTF-8", "TIS-620",  number_format($totalsum6, 2)), 1, 0, 'C');
-  $pdf->Cell($w[3], 10, iconv("UTF-8", "TIS-620",  number_format($totalsum7, 2)), 1, 0, 'C');
-  $pdf->Cell($w[4], 10, iconv("UTF-8", "TIS-620", number_format($totalsum8, 2)), 1, 1, 'C');
-  $scr = (($totalsum4 - $totalsum8) / $totalsum4) * 100;
-  $pdf->ln(7);
-  $pdf->Cell(95, 10, iconv("UTF-8", "TIS-620",  'SCR (Soiled-Clean Ratio)'), 1, 0, 'C');
-  $pdf->Cell(100, 10, iconv("UTF-8", "TIS-620",  number_format(abs($scr), 2) . '%'), 1, 1, 'C');
-}
 
 $ddate = date('d_m_Y');
 $pdf->Output('I', 'Report_Soiled_Clean_Ratio_' . $ddate . '.pdf');
