@@ -137,9 +137,9 @@ class PDF extends FPDF
     $this->SetFont('THSarabun', '', 12);
     if (is_array($data)) {
       foreach ($data as $data => $inner_array) {
-        $code =  $inner_array[$field[14]];
-        $name =  $inner_array[$field[15]];
-        $dateshow =  $inner_array[$field[16]];
+        $code =  $inner_array[$field[13]];
+        $name =  $inner_array[$field[14]];
+        $dateshow =  $inner_array[$field[15]];
         list($y, $m, $d) = explode('-', $dateshow);
         if ($language ==  'th') {
           $y = $y + 543;
@@ -148,12 +148,14 @@ class PDF extends FPDF
         if ($dateshow <> $old_dateshow) {
           $this->SetFont('THSarabun', '', 20);
           $this->ln(10);
-          $this->Cell(0, 10, iconv("UTF-8", "TIS-620", $dateshow), T, 1, 'C');
+          $this->Cell(0, 10, iconv("UTF-8", "TIS-620", $dateshow), 1, 1, 'C');
           $this->ln(5);
           $old_dateshow = $dateshow;
         }
         if ($inner_array[$field[0]] <> null) {
           if ($code <> $old_code) {
+
+ 
             $this->SetFont('THSarabun', 'b', 14);
             $this->Cell(10, 10, iconv("UTF-8", "TIS-620", $array2['department'][$language] . " : " . $name), 0, 1, 'L');
             $this->Cell($w[0], 20, iconv("UTF-8", "TIS-620", $header[0]), 1, 0, 'C');
@@ -197,14 +199,17 @@ class PDF extends FPDF
             $sc2 = substr($inner_array[$field[3]], 0, 5);
           }
           $pdf->SetFont('THSarabun', '', 12);
+
           // list($hoursSS, $minSS, $secordSS) = explode(":",  $sc1);
-          list($hoursSF, $minSF, $secordSF) = explode(":", $inner_array[$field[4]]);
           list($hoursPS, $minPS, $secordPS) = explode(":", $inner_array[$field[5]]);
           list($hoursPF, $minPF, $secordPF) = explode(":", $inner_array[$field[6]]);
           list($hoursDS, $minDS, $secordDS) = explode(":", $inner_array[$field[8]]);
           list($hoursDF, $minDF, $secordDF) = explode(":", $inner_array[$field[9]]);
           // $h1 = $hoursSS - $hoursSF;
-          // $m1 = $minSS - $minSF;
+          $m1 = '00' - '00';
+          $m2 = '00' - '00';
+          $h1 = '00' - '00';
+          $h2 = '00' - '00';
           if ($inner_array[$field[1]] == 'Extra') {
             $h2 = $hoursPS - $hoursPF;
             $m2 = $minPS - $minPF;
@@ -375,39 +380,39 @@ $pdf->Cell(0, 10, iconv("UTF-8", "TIS-620", $array2['r18'][$language]), 0, 0, 'C
 $pdf->Ln(12);
 
 $pdf->SetFont('THSarabun', 'b', 14);
-$pdf->Cell(ุ0, 7, iconv("UTF-8", "TIS-620", $date_header), 0, 0, 'R');
+$pdf->Cell(0, 10, iconv("UTF-8", "TIS-620", $date_header), 0, 0, 'R');
 $pdf->Ln(10);
 if ($language == 'th') {
 
-  $Perfix = THPerfix;
-  $Name = THName;
-  $LName = THLName;
+  $Perfix = 'THPerfix';
+  $Name = 'THName';
+  $LName = 'THLName';
 } else {
 
-  $Perfix = EngPerfix;
-  $Name = EngName;
-  $LName = EngLName;
+  $Perfix = 'EngPerfix';
+  $Name = 'EngName';
+  $LName = 'EngLName';
 }
 
 $header = array($array2['docno'][$language], $array2['Cycle'][$language], $array2['shelfcount'][$language], $array2['packing_time'][$language], $array2['delivery_time'][$language], $array2['total'][$language], $array2['user'][$language], $array2['receivecycle'][$language]);
 // for ($i = 0; $i <= $Count_Dep; $i++) {
 $query = "SELECT
-  department.DepCode,
-  department.DepName,
-  shelfcount.docno,
-  time_sc.TimeName AS CycleTime,
-  COALESCE(TIME(shelfcount.ScStartTime),'-') AS ScStartTime ,
-  COALESCE(TIME(shelfcount.ScEndTime),'-') AS ScEndTime ,  
-  COALESCE(TIME(shelfcount.PkEndTime),'-') AS PkEndTime ,
-  COALESCE(TIME(shelfcount.PkStartTime),'-') AS PkStartTime ,
-  COALESCE(TIME(shelfcount.DvStartTime),'-') AS DvStartTime ,
-  COALESCE(TIME(shelfcount.DvEndTime),'-') AS DvEndTime ,
-  TIMEDIFF(shelfcount.ScEndTime,shelfcount.ScStartTime)AS SC ,
-  TIMEDIFF(shelfcount.PkEndTime,shelfcount.PkStartTime)AS PK ,
-  TIMEDIFF(shelfcount.DvEndTime,shelfcount.DvStartTime)AS DV,
-  CONCAT($Perfix,' ' , $Name,' ' ,$LName)  as USER,
-  sc_time_2.TimeName ,
-  shelfcount.DocDate
+	COALESCE ( department.DepCode ,'-' ) AS DepCode,
+	COALESCE ( department.DepName ,'-' ) AS DepName,
+	COALESCE ( shelfcount.docno ,'-' ) AS docno,
+	COALESCE ( time_sc.TimeName ,'-' ) AS CycleTime,
+	COALESCE ( TIME( shelfcount.ScStartTime ), '00:00:00' ) AS ScStartTime,
+	COALESCE ( TIME( shelfcount.ScEndTime ), '00:00:00' ) AS ScEndTime,
+	COALESCE ( TIME( shelfcount.PkEndTime ), '00:00:00' ) AS PkEndTime,
+	COALESCE ( TIME( shelfcount.PkStartTime ), '00:00:00' ) AS PkStartTime,
+	COALESCE ( TIME( shelfcount.DvStartTime ), '00:00:00' ) AS DvStartTime,
+	COALESCE ( TIME( shelfcount.DvEndTime ), '00:00:00' ) AS DvEndTime,
+	COALESCE ( TIMEDIFF( shelfcount.ScEndTime, shelfcount.ScStartTime ) , '00:00:00' ) AS SC,
+	COALESCE ( TIMEDIFF( shelfcount.PkEndTime, shelfcount.PkStartTime ), '00:00:00' ) AS PK,
+	COALESCE ( TIMEDIFF( shelfcount.DvEndTime, shelfcount.DvStartTime ), '00:00:00' ) AS DV,
+	COALESCE ( CONCAT($Perfix,' ' , $Name,' ' ,$LName), '-' ) AS USER,
+	COALESCE ( sc_time_2.TimeName,'-' ) AS TimeName,
+	COALESCE ( shelfcount.DocDate , '-' ) AS DocDate
   FROM
 	shelfcount
 INNER JOIN department ON department.DepCode = shelfcount.DepCode
@@ -415,12 +420,13 @@ INNER JOIN users ON users.ID = shelfcount.Modify_Code
 LEFT JOIN time_sc ON time_sc.id = shelfcount.DeliveryTime
 LEFT JOIN sc_time_2 ON sc_time_2.id = shelfcount.ScTime
 $where 
+AND YEAR ( shelfcount.Docdate ) = 2022 
 AND department.HptCode = '$HptCode'
 AND shelfcount.isStatus <> 9
 GROUP BY shelfcount.DocNo
 ORDER BY shelfcount.DocDate,shelfcount.DepCode ASC ";
-$field = "docno,CycleTime,ScStartTime,ScEndTime,SC,PkStartTime,PkEndTime,PK,DvStartTime,DvEndTime,DV,,USER,TimeName,DepCode,DepName,DocDate";
-// var_dump($query); die;
+
+$field = "docno,CycleTime,ScStartTime,ScEndTime,SC,PkStartTime,PkEndTime,PK,DvStartTime,DvEndTime,DV,USER,TimeName,DepCode,DepName,DocDate";
 // Number of column
 $numfield = 6;
 // Field data (Must match with Query)
@@ -449,7 +455,9 @@ function sum_the_time($time1,$time2,$time3)
   $minutes  = floor($seconds / 60);
   $seconds -= $minutes * 60;
   // return "{$hours}:{$minutes}:{$seconds}";
-  return sprintf('%02d:%02d:%02d', $hours, $minutes, $seconds); // Thanks to Patrick
+
+
+  return sprintf('%02d:%02d:%02d', $hours, $minutes, $seconds);     // Thanks to Patrick
 }
 $ddate = date('d_m_Y');
 $pdf->Output('I', 'Report_Tracking_status_for_linen_operation_by_ward_' . $ddate . '.pdf');

@@ -1078,6 +1078,14 @@ $array2 = json_decode($json2, TRUE);
 							$('#table_category').attr('hidden', true);
 							$('#table_NoFacDep').attr('hidden', true);
 							$('#table_usage_detail').attr('hidden', true);
+							if(temp['r'] == 'r15'){
+								var hidden = 'hidden';
+								var width = '15%';
+							}else{
+								var hidden = '';
+								var width = '7.5%';
+							}
+
 							if (temp['r'] == 'r23') {
 								for (var i = 0; i < temp['countRow']; i++) {
 									var dataRow = "<tr>" +
@@ -1085,8 +1093,8 @@ $array2 = json_decode($json2, TRUE);
 										"<td class='text-center pl-4' style='width:25%'>" + hot + "</td>" +
 										"<td class='text-center pl-4' style='width:35%'>" + temp[i]['FacName'] + "</td>" +
 										"<td class='text-center' style='width:20%'>" + show_date + "</td>";
-									dataRow += "<td class='text-center' style='width:7.5%'><button  onclick='send_data3(\"" + temp['url'] + "?Fac=" + temp[i]['FacCode'] + "\");'  class='btn btn-info btn-sm' style='font-size:20px!important;padding : 4px'><i class='fas fa-print mr-2'></i>" + Pdf + "</button></td>" +
-										"<td class='text-center' style='width:7.5%'><button  onclick='send_data3(\"" + temp['urlxls'] + "?Fac=" + temp[i]['FacCode'] + "\");'  class='btn btn-success btn-sm' style='font-size:20px!important;padding : 4px'><i class='fas fa-print mr-2'></i>" + Excel + "</button></td>";
+									dataRow += "<td " + hidden + " class='text-center' style='width:7.5%'><button  onclick='send_data3(\"" + temp['url'] + "?Fac=" + temp[i]['FacCode'] + "\");'  class='btn btn-info btn-sm' style='font-size:20px!important;padding : 4px'><i class='fas fa-print mr-2'></i>" + Pdf + "</button></td>" +
+										"<td class='text-center' style='width:" + width + "'><button  onclick='send_data3(\"" + temp['urlxls'] + "?Fac=" + temp[i]['FacCode'] + "\");'  class='btn btn-success btn-sm' style='font-size:20px!important;padding : 4px'><i class='fas fa-print mr-2'></i>" + Excel + "</button></td>";
 									"</tr>";
 									$("#table_Fac tbody").append(dataRow);
 								}
@@ -1097,8 +1105,8 @@ $array2 = json_decode($json2, TRUE);
 										"<td class='text-center pl-4' style='width:25%'>" + hot + "</td>" +
 										"<td class='text-center pl-4' style='width:35%'>" + temp[i]['FacName'] + "</td>" +
 										"<td class='text-center' style='width:20%'>" + show_date + "</td>";
-									dataRow += "<td class='text-center' style='width:7.5%'><button  onclick='send_data(\"" + temp['url'] + "\");'  class='btn btn-info btn-sm' style='font-size:20px!important;padding : 4px'><i class='fas fa-print mr-2'></i>" + Pdf + "</button></td>" +
-										"<td class='text-center' style='width:7.5%'><button  onclick='send_data(\"" + temp['urlxls'] + "\");'  class='btn btn-success btn-sm' style='font-size:20px!important;padding : 4px'><i class='fas fa-print mr-2'></i>" + Excel + "</button></td>";
+									dataRow += "<td " + hidden + " class='text-center' style='width:7.5%'><button  onclick='send_data(\"" + temp['url'] + "\");'  class='btn btn-info btn-sm' style='font-size:20px!important;padding : 4px'><i class='fas fa-print mr-2'></i>" + Pdf + "</button></td>" +
+										"<td class='text-center' style='width:" + width + "'><button  onclick='send_data(\"" + temp['urlxls'] + "\");'  class='btn btn-success btn-sm' style='font-size:20px!important;padding : 4px'><i class='fas fa-print mr-2'></i>" + Excel + "</button></td>";
 									"</tr>";
 									$("#table_Fac tbody").append(dataRow);
 								}

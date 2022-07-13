@@ -20,7 +20,6 @@ $format = $data[6];
 $DepCode = $data[7];
 $chk = $data[8];
 $yearchk = $data[9];
-$year = $data['year'];
 $where = '';
 $language = $_SESSION['lang'];
 if ($language == "en") {
@@ -170,7 +169,7 @@ $pdf->Cell(30, 7, iconv("UTF-8", "TIS-620", $array['hosname'][$language] . " : "
 $pdf->Ln(7);
 $pdf->SetFont('THSarabun', 'b', 14);
 $pdf->Cell(120, 10, iconv("UTF-8", "TIS-620",  ''), 0, 0, 'L');
-$pdf->Cell(ุ60, 10, iconv("UTF-8", "TIS-620", $date_header), 0, 0, 'R');
+$pdf->Cell(60, 10, iconv("UTF-8", "TIS-620", $date_header), 0, 0, 'R');
 $pdf->Ln(12);
 
 $next_page = 1;
@@ -216,7 +215,8 @@ AND damagenh.IsStatus <> 9 AND damagenh.isStatus <> 0
 GROUP BY
 damagenh_detail.ItemCode 
 ORDER BY  damagenh_detail.ItemCode ASC ";
-
+$total1 = 0;
+$total2 = 0;
 $meQuery = mysqli_query($conn, $query);
 while ($Result = mysqli_fetch_assoc($meQuery)) {
   if ($count > 20) {
@@ -244,7 +244,7 @@ while ($Result = mysqli_fetch_assoc($meQuery)) {
   } else {
     $inner_array[$field[1]] = $Result['ItemName'];
   }
-  if ($Result['RequestName'] <> null) {
+  if (isset($Result['RequestName'])) {
     $inner_array[$field[1]] = $Result['RequestName'];
   }
   $inner_array[$field[2]] = $Result['Totalqty'];

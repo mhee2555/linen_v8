@@ -881,7 +881,7 @@ function CreateDocument($conn, $DATA)
     $DocNo2 = $DATA["xdocno2"];
     $isStatus = $DATA["isStatus"];
 
-    $Sql = "UPDATE return_wash SET IsStatus = $isStatus WHERE return_wash.DocNo = '$DocNo'";
+    $Sql = "UPDATE return_wash SET IsStatus = $isStatus  WHERE return_wash.DocNo = '$DocNo'";
     mysqli_query($conn, $Sql);
 
     // ================================================================================

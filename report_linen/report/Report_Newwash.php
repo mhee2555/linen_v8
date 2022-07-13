@@ -135,11 +135,11 @@ $datetime = new DatetimeTH();
 // Using Coding
 $pdf->AddPage("P", "A4");
 if ($language == 'th') {
-  $HptName = HptNameTH;
-  $FacName = FacNameTH;
+  $HptName = 'HptNameTH';
+  $FacName = 'FacNameTH';
 } else {
-  $HptName = HptName;
-  $FacName = FacName;
+  $HptName = 'HptName';
+  $FacName = 'FacName';
 }
 $Sql = "SELECT
 			factory.$FacName,
@@ -183,7 +183,7 @@ $pdf->Cell(30, 7, iconv("UTF-8", "TIS-620", $array['hosname'][$language] . " : "
 $pdf->Ln(7);
 $pdf->SetFont('THSarabun', 'b', 14);
 $pdf->Cell(120, 10, iconv("UTF-8", "TIS-620",  $array['factory'][$language] . " : " . $facname), 0, 0, 'L');
-$pdf->Cell(ุ60, 10, iconv("UTF-8", "TIS-620", $date_header), 0, 0, 'R');
+$pdf->Cell(60, 10, iconv("UTF-8", "TIS-620", $date_header), 0, 0, 'R');
 $pdf->Ln(12);
 $next_page = 1;
 $r = 1;
@@ -235,6 +235,8 @@ GROUP BY
 newlinentable_detail.ItemCode";
 // -- INNER JOIN item_multiple_unit ON item_multiple_unit.MpCode = clean_detail.UnitCode
 // -- AND item_multiple_unit.ItemCode = clean_detail.ItemCode --
+$totalsum1 = 0;
+$totalsum2 = 0;
 $meQuery = mysqli_query($conn, $query);
 while ($Result = mysqli_fetch_assoc($meQuery)) {
   if ($count > 20) {

@@ -426,7 +426,7 @@ function find_report($conn, $DATA)
   $HptCode = $DATA['HptCode'] == null ? $_SESSION['HptCode'] : $DATA['HptCode'];
   $DepCode = $DATA['DepCode'] == null ? $_SESSION['DepCode'] : $DATA['DepCode'];
   $typeReport = $DATA['typeReport'];
-  $Format = $DATA['Format'];
+  isset($DATA['Format']) ? $Format = $DATA['Format']  : $Format = "";
   isset($DATA['FormatDay']) ? $FormatDay = $DATA['FormatDay']  : $FormatDay = "";
   isset($DATA['FormatMonth']) ? $FormatMonth = $DATA['FormatMonth']  : $FormatMonth = "";
   isset($DATA['date']) ? $date = $DATA['date']  : $date = "";

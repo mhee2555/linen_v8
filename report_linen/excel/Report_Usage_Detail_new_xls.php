@@ -572,7 +572,9 @@ else if($type == 'Detail')
       WHERE
       department.DepCode = '$DepCode'
       AND department.HptCode = '$HptCode' ";
+    
 
+ 
     $meQuery = mysqli_query($conn, $query);
     while ($Result = mysqli_fetch_assoc($meQuery)) 
     {
@@ -646,9 +648,10 @@ else if($type == 'Detail')
             $search_item
             AND item.IsActive = 1 
             GROUP BY item.ItemCode
-            ORDER BY ItemName LIMIT 300 ";
-        
-       
+            ORDER BY ItemName LIMIT 300";
+
+    // echo $item;
+    // die;
     $meQuery = mysqli_query($conn, $item);
     while ($Result = mysqli_fetch_assoc($meQuery))
     {
@@ -712,10 +715,9 @@ else if($type == 'Detail')
                      WHERE department.HptCode = '$HptCode'
                      AND par_item_stock.HptCode = '$HptCode'
                      AND par_item_stock.ItemCode = '$itemCode[$q]'
-                     $search_item ";
+                     $search_item  ";
 
-        // echo $Select_Dep;
-        // die;
+
           $meQuery = mysqli_query($conn, $Select_Dep);
           while ($Result = mysqli_fetch_assoc($meQuery))
           {
@@ -725,7 +727,7 @@ else if($type == 'Detail')
 
 
               $r = 2;
-              // // ทำค่าเป็น 0
+              // ทำค่าเป็น 0
               for ($dayx = 0; $dayx < $count; $dayx++) 
               {
                 $ISSUE_loop[$dayx] = 0;
@@ -755,6 +757,7 @@ else if($type == 'Detail')
                               AND item.itemcode = '$itemCode[$q]' 
                               AND shelfcount_detail.TotalQty <> 0 
                               GROUP BY DATE(shelfcount.complete_date) ";
+
                 $meQuery_dep = mysqli_query($conn, $data);
                        
                 while ($Result = mysqli_fetch_assoc($meQuery_dep)) 
@@ -905,7 +908,7 @@ else if($type == 'Detail')
           $objPHPExcel->getActiveSheet()->getStyle("A" . $start_merge . ":" .  "A" . $start_row)->applyFromArray($styleNormal2);
           $objPHPExcel->getActiveSheet()->mergeCells("A" . $start_merge . ":" .  "A" . $start_row);
           $start_rowx = $start_row -1 ;
-          foreach (range($start_merge, $start_rowx) as $column) 
+          foreach (range($start_merge,$start_rowx) as $column) 
           {
             $objPHPExcel->getActiveSheet()->getRowDimension($column)->setOutlineLevel(1);
             $objPHPExcel->getActiveSheet()->getRowDimension($column)->setVisible(false);
@@ -1116,6 +1119,7 @@ else if($type == 'Detail')
   }
 }
 $deletesheet++;
+
 
 $objPHPExcel->setActiveSheetIndex(0);
 $objPHPExcel->removeSheetByIndex($deletesheet);

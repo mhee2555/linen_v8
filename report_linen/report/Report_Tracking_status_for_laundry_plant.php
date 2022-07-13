@@ -295,11 +295,7 @@ $pdf->Ln(10);
 $pdf->SetFont('THSarabun', 'b', 14);
 $pdf->Cell(1);
 $pdf->Cell(165, 10, iconv("UTF-8", "TIS-620", $array2['factory'][$language] . " : " . $Facname), 0, 0, 'L');
-<<<<<<< HEAD
 $pdf->Cell(60 , 10, iconv("UTF-8", "TIS-620", $date_header), 0, 0, 'R');
-=======
-$pdf->Cell(60, 10, iconv("UTF-8", "TIS-620", $date_header), 0, 0, 'R');
->>>>>>> 6d0aab9237871005b67be22004611cc37e75fee1
 $pdf->Ln(12);
 $HptCode = substr($HptCode, 0, 3);
 $doc = array('dirty', 'repair_wash', 'newlinentable');
